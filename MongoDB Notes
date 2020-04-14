@@ -3,5 +3,8 @@ https://github.com/dadarom/spark-mongo
 https://github.com/threecuptea
 
 
+ENVIRONMENT VARIABLE--->
+In path:    C:\Program Files\MongoDB\Server\4.0\bin
+
 MONGO IMPORT--->
 mongoimport --host localhost --db practice --collection products --file C:\Users\kapil.h.kumar\Documents\Study\MongoDB\datafiles\products.json
