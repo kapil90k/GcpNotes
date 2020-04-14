@@ -1,0 +1,40 @@
+GCLOUD SDK TERMINAL FROM WINDOWS--->
+Logging into google:			gcloud auth login
+Check whoami					gcloud auth list
+List all projects:				gcloud projects list
+List selected project:			gcloud config list project
+Setting project:				gcloud config set project ultimate-task-257513
+Unsetting project:				gcloud config unset project
+Setting account					gcloud init
+
+
+SSH CONNECTION--->
+	1) ssh-keygen -t rsa -f ~/.ssh/earthquake-ssh-key -C kapil
+This command will create two key files, private key and public key. 
+	2) Paste public key content in VM(edit vm -> show and edit ssh key )
+	3) Download private key to local and use it in putty with username as "kapil". We should use external ip of the instance like below
+kapil@external_ip
+
+
+TESTING SERVICE ACCOUNT--->
+	pip install google-cloud-storage
+	>>> from google.cloudimportstorage
+	>>> storage_client = storage.Client()
+	>>> buckets = list(storage_client.list_buckets())
+	>>> print(buckets)
+			[<Bucket: ultimate-task-257513-vcm>]
+			
+
+CREATING BUCKET--->
+gsutil mb -p %PROJECT_ID% -c regional -l us-central1 gs://%PROJECT_ID%-vcm/
+
+CREATE BQ DATASET--->
+bq --location=EU mk --dataset movies
+
+CREATING DATAPROC CLUSTER--->  --zone %MYZONE% --region asia-east1-a
+gcloud dataproc clusters create cluster-custom --bucket %PROJECT_ID%-vcm --subnet default  --master-machine-type n1-standard-2 --master-boot-disk-size 100 --num-workers 2 --worker-machine-type n1-standard-1 --worker-boot-disk-size 50 --num-preemptible-workers 2 --image-version 1.2 --scopes https://www.googleapis.com/auth/cloud-platform --tags customaccess --project %PROJECT_ID%
+--initialization-actions 'gs://'$BUCKET'/init-script.sh','gs://cloud-training-demos/dataproc/datalab.sh'
+
+CREATING FIREWALL--->
+gcloud compute --project=%PROJECT_ID% firewall-rules create allow-custom --direction=INGRESS --priority=1000 --network=default --action=ALLOW --rules=tcp:9870,tcp:8088,tcp:8080 --source-ranges=%BROWSER_IP%/32 --target-tags=customaccess
+
