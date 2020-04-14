@@ -1,0 +1,24 @@
+ANGULAR INSTALLATION STEPS--->
+  1) Install node.js from https://nodejs.org/en/download/current/
+	2) node -v to check node.js version
+	3) npm install -g @angular/cli  to install angular cli on windows
+	4) ng --version to check angular version
+	5) ng new my-dream-app
+	6) Cd my-dream-app
+	7) Hit command ng serve to run the application.
+	8) Hit localhost:4200
+
+CREATE COMPONENTS IN ANGULAR--->
+  ng g c product-add --skipTests=true
+	ng g c product-get --skipTests=true
+	ng g c product-edit --skipTests=true
+
+
+Configure Angular Routing Progress Indicator:
+It's third party package.
+	npm install ng2-slim-loading-bar --save
+
+If we want to bridge the gap between Angular 8 and the third-party packages
+	npm install rxjs-compat --save
+
+https://jasonwatmore.com/post/2019/06/10/angular-8-user-registration-and-login-example-tutorial
