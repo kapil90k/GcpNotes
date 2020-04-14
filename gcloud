@@ -1,11 +1,17 @@
 GCLOUD SDK TERMINAL FROM WINDOWS--->
-Logging into google:			gcloud auth login
+Logging into google:				gcloud auth login
 Check whoami					gcloud auth list
 List all projects:				gcloud projects list
-List selected project:			gcloud config list project
+List selected project:				gcloud config list project
 Setting project:				gcloud config set project ultimate-task-257513
 Unsetting project:				gcloud config unset project
 Setting account					gcloud init
+
+DATAPROC CLUSTER--->
+List clusters					gcloud dataproc clusters list --region us-central1
+Describing dataproc				gcloud dataproc clusters describe sparktodp --region=us-central1 --format=json
+Submit pyspark job				gcloud dataproc jobs submit pyspark --cluster sparktobq --region us-central1 Check_spark.py
+
 
 
 SSH CONNECTION--->
