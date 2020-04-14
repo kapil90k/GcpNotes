@@ -1,0 +1,4 @@
+SET PYSPARK IN JUPYTER--->
+PYSPARK_DRIVER_PYTHON: jupyter
+PYSPARK_DRIVER_PYTHON_OPTS: 'notebook'
+PYTHONPATH: C:\Installations\spark-2.2.2-bin-hadoop2.7\python\lib\py4j-0.10.7-src.zip
