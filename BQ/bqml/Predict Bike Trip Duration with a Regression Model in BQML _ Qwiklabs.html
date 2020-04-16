@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)https://googlecoursera.qwiklabs.com/focuses/46793 -->
+<html lang="en" class="mdl-js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+<meta content="[]" name="active-experiments">
+<meta content="{&quot;userId&quot;:2215437}" name="help-api-product-data">
+<meta name="csrf-param" content="authenticity_token">
+<meta name="csrf-token" content="5k2iD39/WvEeuLuYZUdqrgbw0QR6WzLRCgUe/L4Lq9kGGr6DXxlpqgU4aEnk2u002qoLX0BM7Vd3bE40Zn2teA==">
+<title>Predict Bike Trip Duration with a Regression Model in BQML | Qwiklabs</title>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0" name="viewport">
+<meta content="In this lab you will use the London bicycles dataset to build a regression model in BQML to predict trip duration." name="description">
+<meta content="Qwiklabs" name="author">
+<meta content="1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0" name="google-site-verification">
+<meta content="Predict Bike Trip Duration with a Regression Model in BQML | Qwiklabs" property="og:title">
+<meta content="website" property="og:type">
+<meta content="/favicon-144.png" property="og:image">
+<meta content="Qwiklabs" property="og:site_name">
+<meta content="In this lab you will use the London bicycles dataset to build a regression model in BQML to predict trip duration." property="og:description">
+<meta content="/qwiklabs_logo_900x887.png" property="og:logo" size="900x887">
+<meta content="/qwiklabs_logo_994x187.png" property="og:logo" size="994x187">
+<meta content="#3681E4" property="msapplication-TileColor">
+<meta content="/favicon-144.png" property="msapplication-TileImage">
+<link href="https://googlecoursera.qwiklabs.com/favicon-32.png" rel="shortcut icon">
+<link color="#3681E4" href="https://googlecoursera.qwiklabs.com/favicon-svg.svg" rel="mask-icon">
+<link href="https://googlecoursera.qwiklabs.com/favicon-180.png" rel="apple-touch-icon-precomposed">
+<link rel="stylesheet" media="screen" href="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/css">
+
+
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type="text/javascript" async="" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/js"></script><script type="text/javascript" async="" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/analytics.js.download"></script><script type="text/javascript" async="" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/analytics.min.js.download"></script><script type="text/javascript" id="www-widgetapi-script" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/www-widgetapi.js.download" async=""></script><script type="text/javascript" async="" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/recaptcha__en.js.download"></script><script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"kapil","lastname":"h kumar","fullname":"kapil h kumar","company":"Coursera","email":"kapil.h.kumar@accenture.com","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"16b3bf895f73ebd7d9e1e7f216f671c6","qlCreatedAt":"2019-11-07 17:13:56 UTC","optIn":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="googlecoursera-run";
+//]]>
+</script>
+<script src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/api.js.download"></script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script id="ze-snippet" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/snippet.js.download"></script>
+
+
+
+<link rel="stylesheet" media="all" href="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/application-3da541dd71f92e39564c03465c99f32628556dec01f4d39b904adbced14a24aa.css">
+<script>
+  EVENT_SOURCE_BASE_URL = "https://googlecoursera-run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/webcomponents-loader.js.download"></script><script src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/webcomponents-hi.js.download"></script>
+<script src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/hallofmirrors-c8a543a8e9e63ffd57a2b2bb36bd5c342eaa604dffa0f1c63a43d84ccebe2d76.js.download"></script><script async="" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/lazy.min.js.download"></script>
+<script src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/iframe_api"></script>
+<script src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js.download"></script>
+<script src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/application-c23343461fee67994bfc26ae6509cf3e86bcddd7d48088f4de19fb8c0ed6eb13.js.download"></script>
+</head>
+<body class="focuses focuses-show lab-show l-full no-nav">
+<div class="header-container">
+<div class="header">
+<a class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect header__button header__button--nav header__nav-panel-button js-nav-toggle" data-upgraded=",MaterialButton,MaterialRipple">
+<i class="material-icons">menu</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<div class="header__title">
+<a class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect header__button header__button--nav" href="https://www.coursera.org/" data-upgraded=",MaterialButton,MaterialRipple"><ql-icon>arrow_back</ql-icon><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+
+<h1 class="headline-5">
+Predict Bike Trip Duration with a Regression Model in BQML
+</h1>
+</div>
+<div class="header__actions">
+<a class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect header__button header__button--action header__button--search js-header-search-bar-button" data-upgraded=",MaterialButton,MaterialRipple">
+<i class="material-icons">search</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<a class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" id="toggle-lab-control-panel" href="javascript:;" data-upgraded=",MaterialButton,MaterialRipple" tabindex="0"><i class="material-icons">description</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a><div class="mdl-tooltip js-tooltip" data-mdl-for="toggle-lab-control-panel" data-upgraded=",MaterialTooltip">
+Toggle Lab Panel
+</div>
+
+<ql-help context="lab" productdata="{&quot;userId&quot;:2215437}" data-analytics-action="opened_help" data-analytics-label="lab"></ql-help>
+<a class="header-my-account-button mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect js-my-account-button" data-upgraded=",MaterialButton,MaterialRipple">
+<img class="avatar " alt="avatar image" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/a90f55fd00b2b38b68c8d98327feb703.png">
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<div class="header-my-account-menu js-my-account-menu">
+<div class="card elevation-2 no-padding">
+<div class="my-account-menu__top">
+<img class="avatar " alt="avatar image" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/a90f55fd00b2b38b68c8d98327feb703.png">
+<div class="my-account-menu__info">
+<h4 class="subtitle-headline-1">
+kapil h kumar
+</h4>
+<p class="body-2 text--gray">
+<span>kapil.h.kumar@accenture.com</span>
+</p>
+<a class="button" href="https://googlecoursera.qwiklabs.com/my_account/profile">My Account</a>
+</div>
+</div>
+<div class="my-account-menu__bottom">
+<a class="text--green subtitle-headline-2" href="https://googlecoursera.qwiklabs.com/my_account/credits">0 Credits
+</a><a data-analytics-action="clicked_sign_out" class="button button--hairline" rel="nofollow" data-method="delete" href="https://googlecoursera.qwiklabs.com/users/sign_out">Sign Out</a>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+<div class="header__search-bar js-header-search-bar">
+<form id="catalog-search-mobile" onsubmit="ql.catalogSearchFilter(); return false;" action="https://googlecoursera.qwiklabs.com/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="5k2iD39/WvEeuLuYZUdqrgbw0QR6WzLRCgUe/L4Lq9kGGr6DXxlpqgU4aEnk2u002qoLX0BM7Vd3bE40Zn2teA==">
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar">
+</form>
+
+<a class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect header__button" data-upgraded=",MaterialButton,MaterialRipple">
+<i class="material-icons">close</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+</div>
+</div>
+
+<nav class="nav-bar">
+<a class="nav-bar__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/"><ql-icon class="nav-bar__item__icon">
+home
+</ql-icon>
+<span class="nav-bar__item__label">
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/catalog"><ql-icon class="nav-bar__item__icon">
+school
+</ql-icon>
+<span class="nav-bar__item__label">
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_learning"><ql-icon class="nav-bar__item__icon">
+event_note
+</ql-icon>
+<span class="nav-bar__item__label">
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class="nav-panel js-nav-panel">
+<div class="nav-panel__logo">
+<div class="logo logo--blue"></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/"><ql-icon class="nav-panel__item__icon">
+home
+</ql-icon>
+<div class="nav-panel__item__label">
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/catalog"><ql-icon class="nav-panel__item__icon">
+school
+</ql-icon>
+<div class="nav-panel__item__label">
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_learning"><ql-icon class="nav-panel__item__icon">
+event_note
+</ql-icon>
+<div class="nav-panel__item__label">
+My Learning
+</div>
+</a>
+<div class="nav-panel__spacer"></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_account/profile"><ql-icon class="nav-panel__item__icon">
+account_circle
+</ql-icon>
+<div class="nav-panel__item__label">
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_account/credits"><ql-icon class="nav-panel__item__icon">
+money
+</ql-icon>
+<div class="nav-panel__item__label">
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_account/security"><ql-icon class="nav-panel__item__icon">
+security
+</ql-icon>
+<div class="nav-panel__item__label">
+Security
+</div>
+</a>
+<div class="nav-panel__spacer"></div>
+<a class="nav-panel__item" tabindex="-1" href="https://googlecoursera.qwiklabs.com/focuses/46793#"><ql-help>
+<div class="nav-panel__help-item">
+<ql-icon class="nav-panel__item__icon">help</ql-icon>
+<div class="nav-panel__item__label">Help</div>
+</div>
+</ql-help>
+</a><div class="nav-panel__small-links">
+<a tabindex="-1" href="https://googlecoursera.qwiklabs.com/privacy_policy">Privacy</a>
+<a tabindex="-1" href="https://googlecoursera.qwiklabs.com/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class="nav-panel__overlay js-nav-toggle"></div>
+
+<main class="js-main">
+<span class="hidden" id="flash-sibling-before"></span>
+
+<div class="l-main-wrapper" id="main-wrapper">
+
+
+
+
+
+
+
+<div class="js-lab-state" data-analytics-payload="{&quot;label&quot;:&quot;Predict Bike Trip Duration with a Regression Model in BQML&quot;,&quot;lab_name&quot;:&quot;Predict Bike Trip Duration with a Regression Model in BQML&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;googlecoursera-run&quot;}" data-focus-id="46793" data-lab-billing-limit="0.0" data-lab-duration="3600" data-parent="classroom"></div>
+<ql-lab-control-panel class="js-lab-control-panel l-lab-control-panel" connectiondetails="[]" connectionfiles="[]" labcontrolbutton="{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}" labtimer="{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:3600}" studentresources="[]"></ql-lab-control-panel>
+<div class="l-lab-main-body">
+<div class="js-lab-content lab-content">
+<div class="alert alert--fake js-alert">
+<p class="alert__message js-alert-message"></p>
+<a class="alert__close js-alert-close">
+<i class="fa fa-times"></i>
+</a>
+<iframe class="l-ie-iframe-fix" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/saved_resource(1).html"></iframe>
+</div>
+<div class="lab-content__markdown-wrapper">
+<div class="lab-preamble">
+<h1 class="lab-preamble__title">
+Predict Bike Trip Duration with a Regression Model in BQML
+</h1>
+<div class="lab-preamble__details subtitle-headline-1">
+<span>1 hour </span>
+<span>7 Credits</span>
+<div class="lab__rating">
+<a href="https://googlecoursera.qwiklabs.com/focuses/46793/reviews?parent=catalog"><div class="rateit" data-rateit-readonly="true" data-rateit-value="4.4251"><div class="rateit-reset" style="display: none;"></div><div class="rateit-range" style="width: 80px; height: 16px;"><div class="rateit-selected" style="height: 16px; width: 70.8016px;"></div><div class="rateit-hover" style="height:16px"></div></div></div>
+
+</a><a data-target="#lab-review-modal" data-toggle="modal">
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class="lab-content__inner-wrapper">
+<div class="js-markdown-instructions lab-content__markdown markdown-lab-instructions" id="markdown-lab-instructions">
+
+
+
+<h2 id="step1">Overview</h2>
+<p>BigQuery is Google's fully managed, NoOps, low cost analytics database. With BigQuery you can query terabytes and terabytes of data without having any infrastructure to manage or needing a database administrator. BigQuery uses SQL and can take advantage of the pay-as-you-go model. BigQuery allows you to focus on analyzing data to find meaningful insights.</p>
+<p><a href="https://cloud.google.com/bigquery/docs/bigqueryml-analyst-start">BigQuery Machine Learning</a> (BQML, product in beta) is a new feature in BigQuery where data analysts can create, train, evaluate, and predict with machine learning models with minimal coding.</p>
+<p>In this lab you will use the London bicycles dataset to build a regression model in BQML to predict trip duration. Let’s say that you're a bike rental business stocking two types of bicycles -- hardy commuter bikes and fast, but fragile, road bikes. If a bicycle rental is likely to be for a long duration, we need to have road bikes in stock, but if the rental is likely to be for a short duration, we need to have commuter bikes in stock. Therefore, in order to build a system to properly stock bicycles, we need to predict the duration of bicycle rentals.</p>
+<h3>Objectives</h3>
+<p>In this lab, you learn to perform the following tasks:</p>
+<ul>
+<li>
+<p>Query and explore the London bicycles dataset for feature engineering</p>
+</li>
+<li>
+<p>Create a linear regression model in BQML</p>
+</li>
+<li>
+<p>Evaluate the performance of your machine learning model</p>
+</li>
+<li>
+<p>Extract your model weights</p>
+</li>
+</ul>
+<h3>What you'll need</h3>
+<ul>
+<li>
+<p>A Google Cloud Platform Project</p>
+</li>
+<li>
+<p>A Browser, such as Google  <a href="https://www.google.com/chrome/browser/desktop/">Chrome</a> or Mozilla  <a href="https://www.mozilla.org/firefox/">Firefox</a></p>
+</li>
+</ul>
+<h2 id="step2">Set up your environment</h2>
+<h4>What you'll need</h4>
+<p>To complete this lab, you’ll need:</p>
+<ul>
+<li>
+<p>Access to a standard internet browser (Chrome browser recommended).</p>
+</li>
+<li>
+<p>Time. Note the lab’s <strong>Completion</strong> time in Qwiklabs. This is an estimate of the time it should take to complete all steps.  Plan your schedule so you have time to complete the lab. Once you start the lab, you will not be able to pause and return later (you begin at step 1 every time you start a lab).</p>
+</li>
+<li>
+<p>The lab's <strong>Access</strong> time is how long your lab resources will be available. If you finish your lab with access time still available, you will be able to explore the Google Cloud Platform or work on any section of the lab that was marked "if you have time". Once the Access time runs out, your lab will end and all resources will terminate.</p>
+</li>
+<li>
+<p>You <strong>DO NOT</strong> need a Google Cloud Platform account or project. An account, project and associated resources are provided to you as part of this lab.</p>
+</li>
+<li>
+<p>If you already have your own GCP account, make sure you do not use it for this lab.</p>
+</li>
+<li>
+<p>If your lab prompts you to log into the console, <strong>use only the student account provided to you by the lab</strong>. This prevents you from incurring charges for lab activities in your personal GCP account.</p>
+</li>
+</ul>
+<h4>Start your lab</h4>
+<p>When you are ready, click <strong>Start Lab</strong>. You can track your lab’s progress with the status bar at the top of your screen.</p>
+<aside>
+<strong>Important</strong> What is happening during this time?
+  Your lab is spinning up GCP resources for you behind the scenes, including an account, a project, resources within the project, and permission for you to control the resources needed to run the lab. This means that instead of spending time manually setting up a project and building resources from scratch as part of your lab, you can begin learning more quickly.
+
+</aside>
+<h4>Find Your Lab’s GCP Username and Password</h4>
+<p>To access the resources and console for this lab, locate the Connection Details panel in Qwiklabs.  Here you will find the account ID and password for the account you will use to log in to the Google Cloud Platform:</p>
+<p><img alt="Open Google Console" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/0d78dhX6IVMVWmixCPPSBbmi5O2GPokCXf1Ps1AkTgI="></p>
+<p>If your lab provides other resource identifiers or connection-related information, it will appear on this panel as well.</p>
+
+<h4>Log in to Google Cloud Console</h4>
+<p>Using the Qwiklabs browser tab/window or the separate browser you are using for the Qwiklabs session, copy the Username from the Connection Details panel and click the <strong>Open Google Console</strong> button.</p>
+<p>You'll be asked to Choose an account. Click <strong>Use another account</strong>.
+<img alt="Google_choose_Account" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/wNoohdL+wyBavWAhxkN5euPH2ulJhiOzoBlmi1+mGSw="></p>
+<p>Paste in the Username, and then the Password as prompted:</p>
+<p><img alt="Sign in to continue to Google Cloud Platform" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/rP81bHN99Vr7kaKU7fqy2IuSj1rjjNXkD1iunRSBWBw="></p>
+<p>Accept the terms and conditions.</p>
+<p>Since this is a temporary account, which you will only have to access for this one lab:</p>
+<ul>
+<li>Do not add recovery options</li>
+<li>Do not sign up for free trials</li>
+</ul>
+<aside>
+<strong>Note:</strong> You can view the list of services by clicking the GCP Navigation menu button at the top-left next to “Google Cloud Platform”.
+
+  <img alt="Cloud Console Menu" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/RIuVVYUkGtVaWhxtIFJugxyy_ORWQYw7OrLR0bJlReI=">
+</aside>
+
+<h3>Open BigQuery Console</h3>
+<p>In the Google Cloud Console, select <strong>Navigation menu</strong> &gt; <strong>BigQuery</strong>:</p>
+<p><img alt="BigQuery_menu.png" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/QwUX6algdXPgIThqBlgB2rnqGkoQUUANkl3xicD06uc="></p>
+<p>The <strong>Welcome to BigQuery in the Cloud Console</strong> message box opens. This message box provides a link to the quickstart guide and lists UI updates.</p>
+<p>Click <strong>Done</strong>.</p>
+
+<h2 id="step3">Explore bike data for feature engineering</h2>
+<p>The first step of solving an ML problem is to formulate it -- to identify features of our model and the label. Since the goal of our first model is to predict the duration of a rental based on our historical dataset of cycle rentals, the label is the duration of the rental.</p>
+<p>If we believe that the duration will vary based on the station the bicycle is being rented at, the day of the week, and the time of day, those could be our features. Before we go ahead and create a model with these features, though, it’s a good idea to verify that these factors do influence the label.</p>
+<p>Coming up with features for a machine learning model is called feature engineering. Feature engineering is often the most important part of building accurate ML models, and can be much more impactful than deciding which algorithm to use or tuning hyper-parameters. Good feature engineering requires deep understanding of the data and the domain. It is often a process of hypothesis testing; you have an idea for a feature, you check to see if it works (has mutual information with the label), and then you add it to the model. If it doesn’t work, you try again.</p>
+<h3>Impact of station</h3>
+<p>To check whether the duration of a rental varies by station, we can visualize the result of the following query in Data Studio</p>
+<ol>
+<li>
+<p>In the query editor window paste the following query:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT
+  start_station_name</span><span class="pun">,</span><span class="pln">
+  AVG</span><span class="pun">(</span><span class="pln">duration</span><span class="pun">)</span><span class="pln"> AS duration
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire
+GROUP BY
+  start_station_name</span></code><button class="button button--copy js-copy-button-0"><i class="fa fa-clipboard"></i></button></pre>
+<ol start="2">
+<li>Click on <strong>Run</strong>.</li>
+<li>Click on <strong>EXPLORE IN DATA STUDIO</strong> in the BigQuery Cloud Console.</li>
+<li>When prompted, select the <strong>GET STARTED</strong> button.</li>
+<li>Select <strong>AUTHORIZE</strong> when asked if Google Data Studio can access your data.</li>
+<li>Click on <strong>Allow</strong>.</li>
+<li>In the <strong>DATA</strong> tab on the right-hand side menu, configure the settings as follows:</li>
+</ol>
+<p><img alt="1.png" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/zVsmeDsTcjgHZMRD+6H8i2lywbYQg9i40HRFb2+AxHE="></p>
+<ol start="8">
+<li>In the <strong>STYLE</strong> tab on the right-hand side menu, configure the settings as follows:</li>
+</ol>
+<p><img alt="2.png" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/TEYcf4miJAiQQTft7xIWafS7HVi_xRdSwKmBYxgEipc="></p>
+<p>Your plot should resemble this:</p>
+<p><img alt="3.png" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/WeSK3v1DNEMOqde+XVt1TC24EE4AWhZJKgtXYsQITl4="></p>
+<p>It is clear that a handful of stations are associated with long-duration rentals (over 3000 seconds), but that the majority of stations have durations that lie in a relatively narrow range. Had all the stations in London been associated with durations within a narrow range, the station at which the rental commenced would not have been a good feature. But in this problem, as the graph demonstrates, the start_station_name does matter.</p>
+<p>Note that we cannot use end_station_name as a feature because at the time the bicycle is being rented, we won’t know where the bicycle is going to be returned to. Because we are creating a machine learning model to predict events in the future, we need to be mindful of not using any columns that will not be known at the time the prediction is made. This time/causality criterion imposes constraints on what features we can use.</p>
+<h3>Impact of day of week and hour of day</h3>
+<p>For the next candidate features, the process is similar. We can check whether <code>dayofweek</code> (or, similarly, <code>hourofday</code>) matter.</p>
+<ol>
+<li>
+<p>In the query editor window paste the following query:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT
+  EXTRACT</span><span class="pun">(</span><span class="pln">dayofweek
+  FROM
+    start_date</span><span class="pun">)</span><span class="pln"> AS dayofweek</span><span class="pun">,</span><span class="pln">
+  AVG</span><span class="pun">(</span><span class="pln">duration</span><span class="pun">)</span><span class="pln"> AS duration
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire
+GROUP BY
+  dayofweek</span></code><button class="button button--copy js-copy-button-1"><i class="fa fa-clipboard"></i></button></pre>
+<ol start="2">
+<li>Visualize your data in Data Studio. For day of week your visualization should resemble:</li>
+</ol>
+<p><img alt="4.png" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/IRDUGYKrXjTTi3JxANjIsgIB7Mawf_8yW+WmF0Hwzu0="></p>
+<p>For hour of day your visualization should look like the following:</p>
+<p><img alt="5.png" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/ndfSXf0H65gTGnpEcli0FbroWvwRr7_A+IOFDyuayEg="></p>
+<p>It is clear that the duration varies depending both on the day of the week, and on the hour of the day. It appears that durations are longer on weekends (days 1 and 7) than on weekdays. Similarly, durations are longer early in the morning and in the mid-afternoon. Hence, both <code>dayofweek</code> and <code>hourofday</code> are good features.</p>
+<h3>Impact of number of bicycles</h3>
+<p>Another potential feature is the number of bikes in the station. Perhaps, we hypothesize, people keep bicycles longer if there are fewer bicycles on rent at the station they rented from.</p>
+<ol>
+<li>
+<p>In the query editor window paste the following query:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT
+  bikes_count</span><span class="pun">,</span><span class="pln">
+  AVG</span><span class="pun">(</span><span class="pln">duration</span><span class="pun">)</span><span class="pln"> AS duration
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire
+JOIN
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_stations
+ON
+  cycle_hire</span><span class="pun">.</span><span class="pln">start_station_name </span><span class="pun">=</span><span class="pln"> cycle_stations</span><span class="pun">.</span><span class="pln">name
+GROUP BY
+  bikes_count</span></code><button class="button button--copy js-copy-button-2"><i class="fa fa-clipboard"></i></button></pre>
+<ol start="2">
+<li>Visualize your data in Data Studio.</li>
+</ol>
+<p><img alt="6.png" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/M2L7FpdCQ8N_67j8L2iToOw42MR3mGsaJcxt0U3o2jw="></p>
+<p>We notice that the relationship is noisy with no visible trend (compare against hour-of-day, for example). This indicates that the number of bicycles is not a good feature.</p>
+<h2 id="step4">Create a training dataset</h2>
+<p>Based on the exploration of the bicycles dataset and the relationship of various columns to the label column, we can prepare the training dataset by pulling out the selected features and the label:</p>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  duration</span><span class="pun">,</span><span class="pln">
+  start_station_name</span><span class="pun">,</span><span class="pln">
+  CAST</span><span class="pun">(</span><span class="pln">EXTRACT</span><span class="pun">(</span><span class="pln">dayofweek
+    FROM
+      start_date</span><span class="pun">)</span><span class="pln"> AS STRING</span><span class="pun">)</span><span class="pln"> AS dayofweek</span><span class="pun">,</span><span class="pln">
+  CAST</span><span class="pun">(</span><span class="pln">EXTRACT</span><span class="pun">(</span><span class="pln">hour
+    FROM
+      start_date</span><span class="pun">)</span><span class="pln"> AS STRING</span><span class="pun">)</span><span class="pln"> AS hourofday
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire</span></code><button class="button button--copy js-copy-button-3"><i class="fa fa-clipboard"></i></button></pre>
+<p>Feature columns have to be either numeric (INT64, FLOAT64, etc.) or categorical (STRING). If the feature is numeric but needs to be treated as categorical, we need to cast it as a string -- this explains why we casted the <code>dayofweek</code> and <code>hourofday</code> columns which are integers (in the ranges 1-7 and 0-23, respectively) into strings.</p>
+<p>If preparing the data involves computationally expensive transformations or joins, it might be a good idea to save the prepared training data as a table so as to not repeat that work during experimentation. If the transformations are trivial but the query itself is long-winded, it might be convenient to avoid repetitiveness by saving it as a view.</p>
+<p>In this case, the query is simple and short, and so, for clarity, we won't be saving it.</p>
+<ol>
+<li>Create a dataset in BigQuery called <code>bike_model</code> to store your model. Set the <strong>Data location</strong> to the <strong>EU</strong> region since the data we are training on is in the EU.</li>
+</ol>
+<p><img alt="7.png" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/e8L4jEZB8huExxJGFmhKl07oTgeEFs2PEOOL7LDBr2U="></p>
+<ol start="2">
+<li>
+<p>To train the ML model and save it into the dataset <code>bike_model</code>, we need to call <code>CREATE MODEL</code>, which works similarly to <code>CREATE TABLE</code>. Since the label we're trying to predict is numeric this is a regression problem, which is why the most appropriate option is to choose <code>linear_reg</code> as the model type under <code>OPTIONS</code>. Enter the following query into the query editor:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">CREATE OR REPLACE MODEL
+  bike_model</span><span class="pun">.</span><span class="pln">model
+OPTIONS
+  </span><span class="pun">(</span><span class="pln">input_label_cols</span><span class="pun">=[</span><span class="str">'duration'</span><span class="pun">],</span><span class="pln">
+    model_type</span><span class="pun">=</span><span class="str">'linear_reg'</span><span class="pun">)</span><span class="pln"> AS
+SELECT
+  duration</span><span class="pun">,</span><span class="pln">
+  start_station_name</span><span class="pun">,</span><span class="pln">
+  CAST</span><span class="pun">(</span><span class="pln">EXTRACT</span><span class="pun">(</span><span class="pln">dayofweek
+    FROM
+      start_date</span><span class="pun">)</span><span class="pln"> AS STRING</span><span class="pun">)</span><span class="pln"> AS dayofweek</span><span class="pun">,</span><span class="pln">
+  CAST</span><span class="pun">(</span><span class="pln">EXTRACT</span><span class="pun">(</span><span class="pln">hour
+    FROM
+      start_date</span><span class="pun">)</span><span class="pln"> AS STRING</span><span class="pun">)</span><span class="pln"> AS hourofday
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire</span></code><button class="button button--copy js-copy-button-4"><i class="fa fa-clipboard"></i></button></pre>
+<p>Note, the model takes 2-3 minutes to train.</p>
+<ol start="3">
+<li>
+<p>To see some metrics related to model training, enter the following query into the BigQuery editor window:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT </span><span class="pun">*</span><span class="pln"> FROM ML</span><span class="pun">.</span><span class="pln">EVALUATE</span><span class="pun">(</span><span class="pln">MODEL </span><span class="str">`bike_model.model`</span><span class="pun">)</span></code><button class="button button--copy js-copy-button-5"><i class="fa fa-clipboard"></i></button></pre>
+<p>The mean absolute error is 1026 seconds or about 17 minutes. This means that we should expect to be able to predict the duration of bicycle rentals with an average error of about 17 minutes.</p>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="1">
+Create a training dataset
+</ql-activity-tracking></p>
+<h2 id="step5">Improving the model through feature engineering</h2>
+<h3>Combine days of week</h3>
+<p>There are other ways that we could have chosen to represent the features that we have. For example, recall that when we explored the relationship between <code>dayofweek</code> and the <code>duration</code> of rentals, we found that durations were longer on weekends than on weekdays. Therefore, instead of treating the raw value of dayofweek as a feature, we can employ this insight by fusing several <code>dayofweek</code> values into the weekday category</p>
+<ol>
+<li>
+<p>Build a BigQuery ML model with the combined days of week feature using the following query:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">CREATE OR REPLACE MODEL
+  bike_model</span><span class="pun">.</span><span class="pln">model_weekday
+OPTIONS
+  </span><span class="pun">(</span><span class="pln">input_label_cols</span><span class="pun">=[</span><span class="str">'duration'</span><span class="pun">],</span><span class="pln">
+    model_type</span><span class="pun">=</span><span class="str">'linear_reg'</span><span class="pun">)</span><span class="pln"> AS
+SELECT
+  duration</span><span class="pun">,</span><span class="pln">
+  start_station_name</span><span class="pun">,</span><span class="pln">
+IF
+  </span><span class="pun">(</span><span class="pln">EXTRACT</span><span class="pun">(</span><span class="pln">dayofweek
+    FROM
+      start_date</span><span class="pun">)</span><span class="pln"> BETWEEN </span><span class="lit">2</span><span class="pln"> AND </span><span class="lit">6</span><span class="pun">,</span><span class="pln">
+    </span><span class="str">'weekday'</span><span class="pun">,</span><span class="pln">
+    </span><span class="str">'weekend'</span><span class="pun">)</span><span class="pln"> AS dayofweek</span><span class="pun">,</span><span class="pln">
+  CAST</span><span class="pun">(</span><span class="pln">EXTRACT</span><span class="pun">(</span><span class="pln">hour
+    FROM
+      start_date</span><span class="pun">)</span><span class="pln"> AS STRING</span><span class="pun">)</span><span class="pln"> AS hourofday
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire</span></code><button class="button button--copy js-copy-button-6"><i class="fa fa-clipboard"></i></button></pre>
+<p>This model results in a mean absolute error of 967 seconds which is less than the 1026 seconds for the original model. Improvement!</p>
+<h3>Bucketize hour of day</h3>
+<p>Based on the relationship between <code>hourofday</code> and the <code>duration</code>, we can experiment with bucketizing the variable into 4 bins; (-inf,5), [5,10), [10,17), and [17,inf).</p>
+<ol>
+<li>
+<p>Build a BigQuery ML model with the bucketized hour of day, and combined days of week features using the query below:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">CREATE OR REPLACE MODEL
+  bike_model</span><span class="pun">.</span><span class="pln">model_bucketized
+OPTIONS
+  </span><span class="pun">(</span><span class="pln">input_label_cols</span><span class="pun">=[</span><span class="str">'duration'</span><span class="pun">],</span><span class="pln">
+    model_type</span><span class="pun">=</span><span class="str">'linear_reg'</span><span class="pun">)</span><span class="pln"> AS
+SELECT
+  duration</span><span class="pun">,</span><span class="pln">
+  start_station_name</span><span class="pun">,</span><span class="pln">
+IF
+  </span><span class="pun">(</span><span class="pln">EXTRACT</span><span class="pun">(</span><span class="pln">dayofweek
+    FROM
+      start_date</span><span class="pun">)</span><span class="pln"> BETWEEN </span><span class="lit">2</span><span class="pln"> AND </span><span class="lit">6</span><span class="pun">,</span><span class="pln">
+    </span><span class="str">'weekday'</span><span class="pun">,</span><span class="pln">
+    </span><span class="str">'weekend'</span><span class="pun">)</span><span class="pln"> AS dayofweek</span><span class="pun">,</span><span class="pln">
+  ML</span><span class="pun">.</span><span class="pln">BUCKETIZE</span><span class="pun">(</span><span class="pln">EXTRACT</span><span class="pun">(</span><span class="pln">hour
+    FROM
+      start_date</span><span class="pun">),</span><span class="pln">
+    </span><span class="pun">[</span><span class="lit">5</span><span class="pun">,</span><span class="pln"> </span><span class="lit">10</span><span class="pun">,</span><span class="pln"> </span><span class="lit">17</span><span class="pun">])</span><span class="pln"> AS hourofday
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire</span></code><button class="button button--copy js-copy-button-7"><i class="fa fa-clipboard"></i></button></pre>
+<p>This model results in a mean absolute error of 901 seconds which is less than the 967 seconds for the weekday-weekend model. Futher improvement!</p>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="2">
+Improving the model through feature engineering
+</ql-activity-tracking></p>
+<h2 id="step6">Make predictions</h2>
+<p>Our best model contains several data transformations. Wouldn’t it be nice if BigQuery could remember the sets of transformations we did at the time of training and automatically apply them at the time of prediction? It can, using the <code>TRANSFORM</code> clause!</p>
+<p>In this case, the resulting model requires just the <code>start_station_name</code> and <code>start_date</code> to predict the <code>duration</code>. The transformations are saved and carried out on the provided raw data to create input features for the model. The main advantage of placing all preprocessing functions inside the TRANSFORM clause is that clients of the model do not have to know what kind of preprocessing has been carried out.</p>
+<ol>
+<li>
+<p>Build a BigQuery ML model with the <code>TRANSFORM</code> clause that incorporates the bucketized hour of day, and combined days of week features using the query below:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">CREATE OR REPLACE MODEL
+  bike_model</span><span class="pun">.</span><span class="pln">model_bucketized TRANSFORM</span><span class="pun">(*</span><span class="pln"> EXCEPT</span><span class="pun">(</span><span class="pln">start_date</span><span class="pun">),</span><span class="pln">
+  IF
+    </span><span class="pun">(</span><span class="pln">EXTRACT</span><span class="pun">(</span><span class="pln">dayofweek
+      FROM
+        start_date</span><span class="pun">)</span><span class="pln"> BETWEEN </span><span class="lit">2</span><span class="pln"> AND </span><span class="lit">6</span><span class="pun">,</span><span class="pln">
+      </span><span class="str">'weekday'</span><span class="pun">,</span><span class="pln">
+      </span><span class="str">'weekend'</span><span class="pun">)</span><span class="pln"> AS dayofweek</span><span class="pun">,</span><span class="pln">
+    ML</span><span class="pun">.</span><span class="pln">BUCKETIZE</span><span class="pun">(</span><span class="pln">EXTRACT</span><span class="pun">(</span><span class="pln">HOUR
+      FROM
+        start_date</span><span class="pun">),</span><span class="pln">
+      </span><span class="pun">[</span><span class="lit">5</span><span class="pun">,</span><span class="pln"> </span><span class="lit">10</span><span class="pun">,</span><span class="pln"> </span><span class="lit">17</span><span class="pun">])</span><span class="pln"> AS hourofday </span><span class="pun">)</span><span class="pln">
+OPTIONS
+  </span><span class="pun">(</span><span class="pln">input_label_cols</span><span class="pun">=[</span><span class="str">'duration'</span><span class="pun">],</span><span class="pln">
+    model_type</span><span class="pun">=</span><span class="str">'linear_reg'</span><span class="pun">)</span><span class="pln"> AS
+SELECT
+  duration</span><span class="pun">,</span><span class="pln">
+  start_station_name</span><span class="pun">,</span><span class="pln">
+  start_date
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire</span></code><button class="button button--copy js-copy-button-8"><i class="fa fa-clipboard"></i></button></pre>
+<ol start="2">
+<li>
+<p>With the <code>TRANSFORM</code> clause in place, enter this query to predict the duration of a rental from Park Lane right now (your result will vary):</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  </span><span class="pun">*</span><span class="pln">
+FROM
+  ML</span><span class="pun">.</span><span class="pln">PREDICT</span><span class="pun">(</span><span class="pln">MODEL bike_model</span><span class="pun">.</span><span class="pln">model_bucketized</span><span class="pun">,</span><span class="pln">
+    </span><span class="pun">(</span><span class="pln">
+    SELECT
+      </span><span class="str">'Park Lane , Hyde Park'</span><span class="pln"> AS start_station_name</span><span class="pun">,</span><span class="pln">
+      CURRENT_TIMESTAMP</span><span class="pun">()</span><span class="pln"> AS start_date</span><span class="pun">)</span><span class="pln"> </span><span class="pun">)</span></code><button class="button button--copy js-copy-button-9"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="8.png" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/uSt5Q17A3iaWe1UBl+b_IxtQBAqVEQVHRkSZNz8E1NY="></p>
+<ol start="3">
+<li>
+<p>To make batch predictions on a sample of 100 rows in the training set use the query:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT
+  </span><span class="pun">*</span><span class="pln">
+FROM
+  ML</span><span class="pun">.</span><span class="pln">PREDICT</span><span class="pun">(</span><span class="pln">MODEL bike_model</span><span class="pun">.</span><span class="pln">model_bucketized</span><span class="pun">,</span><span class="pln">
+    </span><span class="pun">(</span><span class="pln">
+    SELECT
+      start_station_name</span><span class="pun">,</span><span class="pln">
+      start_date
+    FROM
+      </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire
+    LIMIT
+      </span><span class="lit">100</span><span class="pun">)</span><span class="pln"> </span><span class="pun">)</span></code><button class="button button--copy js-copy-button-10"><i class="fa fa-clipboard"></i></button></pre>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="3">
+Make predictions
+</ql-activity-tracking></p>
+<h2 id="step7">Examine model weights</h2>
+<p>A linear regression model predicts the output as a weighted sum of its inputs. Often times, the weights of the model need to be utilized in a production environment.</p>
+<ol>
+<li>
+<p>Examine (or export) the weights of your model using the query below:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT </span><span class="pun">*</span><span class="pln"> FROM ML</span><span class="pun">.</span><span class="pln">WEIGHTS</span><span class="pun">(</span><span class="pln">MODEL bike_model</span><span class="pun">.</span><span class="pln">model_bucketized</span><span class="pun">)</span></code><button class="button button--copy js-copy-button-11"><i class="fa fa-clipboard"></i></button></pre>
+<p>Note, numeric features get a single weight, while categorical features get a weight for each possible value. For example, the dayofweek feature has the following weights:</p>
+<p><img alt="9.png" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/QqVJjiPJR444vOASHe8UMcUt2DertyqlBg50QGtdSBs="></p>
+<p>This means that if the day is a weekday, the contribution of this feature to the overall predicted duration is 1709 seconds (the weights that provide the optimal performance are not unique, so you might get a different value).</p>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="4">
+Examine model weights
+</ql-activity-tracking></p>
+<h2 id="step8">End your lab</h2>
+<p>When you have completed your lab, click <strong>End Lab</strong>. Qwiklabs removes the resources you’ve used and cleans the account for you.</p>
+<p>You will be given an opportunity to rate the lab experience. Select the applicable number of stars, type a comment, and then click <strong>Submit</strong>.</p>
+<p>The number of stars indicates the following:</p>
+<ul>
+<li>1 star = Very dissatisfied</li>
+<li>2 stars = Dissatisfied</li>
+<li>3 stars = Neutral</li>
+<li>4 stars = Satisfied</li>
+<li>5 stars = Very satisfied</li>
+</ul>
+<p>You can close the dialog box if you don't want to provide feedback.</p>
+<p>For feedback, suggestions, or corrections, please use the <strong>Support</strong> tab.</p>
+
+<p>©2019 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+<div class="js-lab-content-outline lab-content__outline is-stuck">
+<a href="https://googlecoursera.qwiklabs.com/focuses/46793#step1" class="">Overview</a><a href="https://googlecoursera.qwiklabs.com/focuses/46793#step2" class="">Set up your environment</a><a href="https://googlecoursera.qwiklabs.com/focuses/46793#step3" class="">Explore bike data for feature engineering</a><a href="https://googlecoursera.qwiklabs.com/focuses/46793#step4" class="is-active">Create a training dataset</a><a href="https://googlecoursera.qwiklabs.com/focuses/46793#step5">Improving the model through feature engineering</a><a href="https://googlecoursera.qwiklabs.com/focuses/46793#step6">Make predictions</a><a href="https://googlecoursera.qwiklabs.com/focuses/46793#step7">Examine model weights</a><a href="https://googlecoursera.qwiklabs.com/focuses/46793#step8">End your lab</a>
+</div>
+</div>
+
+</div>
+
+
+</div>
+</div>
+<div class="lab-assessment__tab js-lab-assessment-tab">
+<h5 class="small-label">
+Score
+</h5>
+<h3 class="js-lab-assessment-total-score">
+—/20
+</h3>
+<iframe class="l-ie-iframe-fix" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/saved_resource(2).html"></iframe>
+</div>
+<div class="lab-assessment__panel js-lab-assessment-panel">
+<!-- / If lab_instance has is started and assessment is generated, use -->
+<!-- / lab_instance.assessment, otherwise use lab.assessment_manual -->
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+Create a training dataset
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="1">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-1">
+</span>
+/ 5
+</p>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+Improving the model through feature engineering
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="2">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-2">
+</span>
+/ 5
+</p>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+Make predictions
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="3">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-3">
+</span>
+/ 5
+</p>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+Examine model weights
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="4">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-4">
+</span>
+/ 5
+</p>
+</div>
+
+<iframe class="l-ie-iframe-fix" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/saved_resource(3).html"></iframe>
+</div>
+<div class="lab-introduction js-lab-introduction is-hidden">
+<div class="lab-introduction__inner">
+<h1 class="headline-1">Welcome to Your First Lab!</h1>
+<ql-icon-button class="js-skip-button">close</ql-icon-button>
+<div class="lab-introduction__video">
+<iframe allow="autoplay; encrypted-media" allowfullscreen="" frameborder="0" id="lab-introduction" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/yF7EDXKTmoQ.html"></iframe>
+</div>
+<a class="js-skip-button button button--outline">Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+<div class="modal fade" id="lab-details-modal">
+<div class="modal-container">
+<div class="mdl-shadow--24dp modal-content">
+<div class="modal-body">
+<p class="l-mbm">
+In this lab you will use the London bicycles dataset to build a regression model in BQML to predict trip duration.
+</p>
+<p class="small-label l-mbs">
+<strong>
+Duration:
+</strong>
+0m setup
+·
+60m access
+·
+60m completion
+</p>
+<p class="small-label l-mbs">
+<span><strong>Levels: </strong>advanced</span>
+</p>
+<p class="small-label">
+<strong>
+Permalink:
+</strong>
+<a href="https://googlecoursera.qwiklabs.com/catalog_lab/2125">https://googlecoursera.qwiklabs.com/catalog_lab/2125</a>
+</p>
+</div>
+<div class="modal-actions">
+<a class="mdl-button mdl-button--primary mdl-js-button mdl-js-ripple-effect" data-dismiss="modal" data-upgraded=",MaterialButton,MaterialRipple">
+Got It
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+</div>
+
+
+</div>
+</div>
+<iframe class="l-ie-iframe-fix" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/saved_resource(4).html"></iframe>
+</div>
+<div class="modal fade" id="lab-review-modal">
+<div class="modal-container">
+<div class="mdl-shadow--24dp modal-content">
+<form class="simple_form js-lab-review-form" id="edit_lab_review_4405765" action="https://googlecoursera.qwiklabs.com/lab_reviews/4405765" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="patch"><div class="modal-body">
+<p class="label">
+How satisfied are you with this lab?*
+</p>
+<div class="rateit js-rateit" data-rateit-max="5" data-rateit-min="0" data-rateit-resetable="false" data-rateit-step="1" data-rateit-value="5"><div class="rateit-reset" style="display: none;"></div><div class="rateit-range" style="width: 80px; height: 16px;"><div class="rateit-selected" style="height: 16px; width: 80px;"></div><div class="rateit-hover" style="height:16px"></div></div></div>
+<div class="l-mtm">
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="2215437" name="lab_review[user_id]" id="lab_review_user_id"></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" value="5974" name="lab_review[classroom_id]" id="lab_review_classroom_id"></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="2125" name="lab_review[lab_id]" id="lab_review_lab_id"></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" value="46793" name="lab_review[focus_id]" id="lab_review_focus_id"></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="2" name="lab_review[rating]" id="lab_review_rating"></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment"></textarea></div></div>
+</div>
+</div>
+<div class="modal-actions">
+<a class="mdl-button mdl-button--primary mdl-js-button mdl-js-ripple-effect" data-dismiss="modal" data-upgraded=",MaterialButton,MaterialRipple">
+Cancel
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" class="btn mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary" id="submit" data-disabled="false" data-disable-with="Submit" data-upgraded=",MaterialButton,MaterialRipple"><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></input>
+</div>
+</form>
+
+</div>
+</div>
+<iframe class="l-ie-iframe-fix" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/saved_resource(5).html"></iframe>
+</div>
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    initLabContent( );
+  ql.labOutline.links.init();
+  ql.labOutline.layout.init();
+  initLabReviewModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+<style>
+  .mdl-layout__container {
+    position: static
+  }
+</style>
+
+
+<iframe data-product="web_widget" title="No content" tabindex="-1" aria-hidden="true" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/saved_resource(6).html" style="width: 0px; height: 0px; border: 0px; position: absolute; top: -9999px;"></iframe><object id="__symantecPKIClientMessenger" data-supports-flavor-configuration="true" data-extension-version="0.5.0.109" style="display: none;"></object><span id="__symantecPKIClientDetector" style="display: none;">__PRESENT</span><div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s ease 0s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><iframe src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/anchor.html" width="256" height="60" role="presentation" name="a-6aoo6clhf2vt" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/saved_resource(7).html"></iframe></div><div><iframe title="Opens a widget where you can chat to one of our agents" id="launcher" tabindex="0" class="zEWidget-launcher zEWidget-launcher--active" style="border: none; background: transparent; z-index: 999998; transform: translateZ(0px); position: fixed; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; opacity: 1; height: 50px; max-height: 551px; min-height: 50px; margin: 10px 20px; right: 0px; bottom: 0px; width: 112px;width: 112px;" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/saved_resource(8).html"></iframe></div><div><iframe title="Find more information here" id="webWidget" tabindex="-1" class="zEWidget-webWidget " style="border: none; background: transparent; z-index: 999999; transform: translateZ(0px); position: fixed; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; opacity: 0; width: 357px; height: 100%; max-height: 565px; min-height: 150px; margin-left: 8px; margin-right: 8px; top: -9999px; visibility: hidden;" src="./Predict Bike Trip Duration with a Regression Model in BQML _ Qwiklabs_files/saved_resource(9).html"></iframe></div></body></html>

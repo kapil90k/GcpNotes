@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)https://googlecoursera.qwiklabs.com/focuses/46800 -->
+<html lang="en" class="mdl-js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+<meta content="[]" name="active-experiments">
+<meta content="{&quot;userId&quot;:2215437}" name="help-api-product-data">
+<meta name="csrf-param" content="authenticity_token">
+<meta name="csrf-token" content="DICAk54oKo4dg8s6pJr2B+w66u1zDP+cmxMczKoCmpPs15wfvk4Z1QYDGOslB3GdMGAwtkkbIBrmekwEcnScMg==">
+<title>Optimizing your BigQuery Queries for Performance | Qwiklabs</title>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0" name="viewport">
+<meta content="In this lab, we will look at a number of techniques for reducing query execution times and cost in BigQuery." name="description">
+<meta content="Qwiklabs" name="author">
+<meta content="1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0" name="google-site-verification">
+<meta content="Optimizing your BigQuery Queries for Performance | Qwiklabs" property="og:title">
+<meta content="website" property="og:type">
+<meta content="/favicon-144.png" property="og:image">
+<meta content="Qwiklabs" property="og:site_name">
+<meta content="In this lab, we will look at a number of techniques for reducing query execution times and cost in BigQuery." property="og:description">
+<meta content="/qwiklabs_logo_900x887.png" property="og:logo" size="900x887">
+<meta content="/qwiklabs_logo_994x187.png" property="og:logo" size="994x187">
+<meta content="#3681E4" property="msapplication-TileColor">
+<meta content="/favicon-144.png" property="msapplication-TileImage">
+<link href="https://googlecoursera.qwiklabs.com/favicon-32.png" rel="shortcut icon">
+<link color="#3681E4" href="https://googlecoursera.qwiklabs.com/favicon-svg.svg" rel="mask-icon">
+<link href="https://googlecoursera.qwiklabs.com/favicon-180.png" rel="apple-touch-icon-precomposed">
+<link rel="stylesheet" media="screen" href="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/css">
+
+
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type="text/javascript" async="" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/js"></script><script type="text/javascript" async="" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/analytics.js.download"></script><script type="text/javascript" async="" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/analytics.min.js.download"></script><script type="text/javascript" id="www-widgetapi-script" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/www-widgetapi.js.download" async=""></script><script type="text/javascript" async="" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/recaptcha__en.js.download"></script><script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"kapil","lastname":"h kumar","fullname":"kapil h kumar","company":"Coursera","email":"kapil.h.kumar@accenture.com","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"16b3bf895f73ebd7d9e1e7f216f671c6","qlCreatedAt":"2019-11-07 17:13:56 UTC","optIn":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="googlecoursera-run";
+//]]>
+</script>
+<script src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/api.js.download"></script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script id="ze-snippet" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/snippet.js.download"></script>
+
+
+
+<link rel="stylesheet" media="all" href="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/application-3da541dd71f92e39564c03465c99f32628556dec01f4d39b904adbced14a24aa.css">
+<script>
+  EVENT_SOURCE_BASE_URL = "https://googlecoursera-run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/webcomponents-loader.js.download"></script><script src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/webcomponents-hi.js.download"></script>
+<script src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/hallofmirrors-c8a543a8e9e63ffd57a2b2bb36bd5c342eaa604dffa0f1c63a43d84ccebe2d76.js.download"></script><script async="" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/lazy.min.js.download"></script>
+<script src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/iframe_api"></script>
+<script src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js.download"></script>
+<script src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/application-c23343461fee67994bfc26ae6509cf3e86bcddd7d48088f4de19fb8c0ed6eb13.js.download"></script>
+</head>
+<body class="focuses focuses-show lab-show l-full no-nav">
+<div class="header-container">
+<div class="header">
+<a class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect header__button header__button--nav header__nav-panel-button js-nav-toggle" data-upgraded=",MaterialButton,MaterialRipple">
+<i class="material-icons">menu</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<div class="header__title">
+<a class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect header__button header__button--nav" href="https://www.coursera.org/" data-upgraded=",MaterialButton,MaterialRipple"><ql-icon>arrow_back</ql-icon><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+
+<h1 class="headline-5">
+Optimizing your BigQuery Queries for Performance
+</h1>
+</div>
+<div class="header__actions">
+<a class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect header__button header__button--action header__button--search js-header-search-bar-button" data-upgraded=",MaterialButton,MaterialRipple">
+<i class="material-icons">search</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<a class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" id="toggle-lab-control-panel" href="javascript:;" data-upgraded=",MaterialButton,MaterialRipple" tabindex="0"><i class="material-icons">description</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a><div class="mdl-tooltip js-tooltip" data-mdl-for="toggle-lab-control-panel" data-upgraded=",MaterialTooltip">
+Toggle Lab Panel
+</div>
+
+<ql-help context="lab" productdata="{&quot;userId&quot;:2215437}" data-analytics-action="opened_help" data-analytics-label="lab"></ql-help>
+<a class="header-my-account-button mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect js-my-account-button" data-upgraded=",MaterialButton,MaterialRipple">
+<img class="avatar " alt="avatar image" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/a90f55fd00b2b38b68c8d98327feb703.png">
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<div class="header-my-account-menu js-my-account-menu">
+<div class="card elevation-2 no-padding">
+<div class="my-account-menu__top">
+<img class="avatar " alt="avatar image" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/a90f55fd00b2b38b68c8d98327feb703.png">
+<div class="my-account-menu__info">
+<h4 class="subtitle-headline-1">
+kapil h kumar
+</h4>
+<p class="body-2 text--gray">
+<span>kapil.h.kumar@accenture.com</span>
+</p>
+<a class="button" href="https://googlecoursera.qwiklabs.com/my_account/profile">My Account</a>
+</div>
+</div>
+<div class="my-account-menu__bottom">
+<a class="text--green subtitle-headline-2" href="https://googlecoursera.qwiklabs.com/my_account/credits">0 Credits
+</a><a data-analytics-action="clicked_sign_out" class="button button--hairline" rel="nofollow" data-method="delete" href="https://googlecoursera.qwiklabs.com/users/sign_out">Sign Out</a>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+<div class="header__search-bar js-header-search-bar">
+<form id="catalog-search-mobile" onsubmit="ql.catalogSearchFilter(); return false;" action="https://googlecoursera.qwiklabs.com/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="DICAk54oKo4dg8s6pJr2B+w66u1zDP+cmxMczKoCmpPs15wfvk4Z1QYDGOslB3GdMGAwtkkbIBrmekwEcnScMg==">
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar">
+</form>
+
+<a class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect header__button" data-upgraded=",MaterialButton,MaterialRipple">
+<i class="material-icons">close</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+</div>
+</div>
+
+<nav class="nav-bar">
+<a class="nav-bar__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/"><ql-icon class="nav-bar__item__icon">
+home
+</ql-icon>
+<span class="nav-bar__item__label">
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/catalog"><ql-icon class="nav-bar__item__icon">
+school
+</ql-icon>
+<span class="nav-bar__item__label">
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_learning"><ql-icon class="nav-bar__item__icon">
+event_note
+</ql-icon>
+<span class="nav-bar__item__label">
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class="nav-panel js-nav-panel">
+<div class="nav-panel__logo">
+<div class="logo logo--blue"></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/"><ql-icon class="nav-panel__item__icon">
+home
+</ql-icon>
+<div class="nav-panel__item__label">
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/catalog"><ql-icon class="nav-panel__item__icon">
+school
+</ql-icon>
+<div class="nav-panel__item__label">
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_learning"><ql-icon class="nav-panel__item__icon">
+event_note
+</ql-icon>
+<div class="nav-panel__item__label">
+My Learning
+</div>
+</a>
+<div class="nav-panel__spacer"></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_account/profile"><ql-icon class="nav-panel__item__icon">
+account_circle
+</ql-icon>
+<div class="nav-panel__item__label">
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_account/credits"><ql-icon class="nav-panel__item__icon">
+money
+</ql-icon>
+<div class="nav-panel__item__label">
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_account/security"><ql-icon class="nav-panel__item__icon">
+security
+</ql-icon>
+<div class="nav-panel__item__label">
+Security
+</div>
+</a>
+<div class="nav-panel__spacer"></div>
+<a class="nav-panel__item" tabindex="-1" href="https://googlecoursera.qwiklabs.com/focuses/46800#"><ql-help>
+<div class="nav-panel__help-item">
+<ql-icon class="nav-panel__item__icon">help</ql-icon>
+<div class="nav-panel__item__label">Help</div>
+</div>
+</ql-help>
+</a><div class="nav-panel__small-links">
+<a tabindex="-1" href="https://googlecoursera.qwiklabs.com/privacy_policy">Privacy</a>
+<a tabindex="-1" href="https://googlecoursera.qwiklabs.com/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class="nav-panel__overlay js-nav-toggle"></div>
+
+<main class="js-main">
+<span class="hidden" id="flash-sibling-before"></span>
+
+<div class="l-main-wrapper" id="main-wrapper">
+
+
+
+
+
+
+
+<div class="js-lab-state" data-analytics-payload="{&quot;label&quot;:&quot;Optimizing your BigQuery Queries for Performance&quot;,&quot;lab_name&quot;:&quot;Optimizing your BigQuery Queries for Performance&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;googlecoursera-run&quot;}" data-focus-id="46800" data-lab-billing-limit="0.0" data-lab-duration="3600" data-parent="classroom"></div>
+<ql-lab-control-panel class="js-lab-control-panel l-lab-control-panel" connectiondetails="[]" connectionfiles="[]" labcontrolbutton="{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}" labtimer="{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:3600}" studentresources="[]"></ql-lab-control-panel>
+<div class="l-lab-main-body">
+<div class="js-lab-content lab-content">
+<div class="alert alert--fake js-alert">
+<p class="alert__message js-alert-message"></p>
+<a class="alert__close js-alert-close">
+<i class="fa fa-times"></i>
+</a>
+<iframe class="l-ie-iframe-fix" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/saved_resource(1).html"></iframe>
+</div>
+<div class="lab-content__markdown-wrapper">
+<div class="lab-preamble">
+<h1 class="lab-preamble__title">
+Optimizing your BigQuery Queries for Performance
+</h1>
+<div class="lab-preamble__details subtitle-headline-1">
+<span>1 hour </span>
+<span>7 Credits</span>
+<div class="lab__rating">
+<a href="https://googlecoursera.qwiklabs.com/focuses/46800/reviews?parent=catalog"><div class="rateit" data-rateit-readonly="true" data-rateit-value="4.4683"><div class="rateit-reset" style="display: none;"></div><div class="rateit-range" style="width: 80px; height: 16px;"><div class="rateit-selected" style="height: 16px; width: 71.4928px;"></div><div class="rateit-hover" style="height:16px"></div></div></div>
+
+</a><a data-target="#lab-review-modal" data-toggle="modal">
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class="lab-content__inner-wrapper">
+<div class="js-markdown-instructions lab-content__markdown markdown-lab-instructions" id="markdown-lab-instructions">
+
+
+
+<h2 id="step1">Overview</h2>
+<p>Performance tuning of BigQuery is usually carried out because we wish to reduce query execution times or cost. In this lab, we will look at a number of performance optimizations that might work for your use case. Performance tuning should be carried out only at the end of the development stage, and only if it is observed that typical queries take too long. It is far better to have flexible table schemas and elegant, readable, and maintainable queries than to obfuscate table layouts and queries in search of a tiny bit of performance. However, there will be instances where you do need to improve the performance of your queries, perhaps because they are carried out so often that small improvements are meaningful. Another aspect is that knowledge of performance tradeoffs can help you in deciding between alternative designs.</p>
+<h3>Objectives</h3>
+<p>In this lab, you learn about the following techniques for reducing BigQuery execution times and costs:</p>
+<ul>
+<li>
+<p>Minimizing I/O</p>
+</li>
+<li>
+<p>Caching results of previous queries</p>
+</li>
+<li>
+<p>Performing efficient joins</p>
+</li>
+<li>
+<p>Avoid over-whelming single workers</p>
+</li>
+<li>
+<p>Using approximate aggregation functions</p>
+</li>
+</ul>
+<h2 id="step2">Setup and requirements</h2>
+<h4>What you'll need</h4>
+<p>To complete this lab, you’ll need:</p>
+<ul>
+<li>
+<p>Access to a standard internet browser (Chrome browser recommended).</p>
+</li>
+<li>
+<p>Time. Note the lab’s <strong>Completion</strong> time in Qwiklabs. This is an estimate of the time it should take to complete all steps.  Plan your schedule so you have time to complete the lab. Once you start the lab, you will not be able to pause and return later (you begin at step 1 every time you start a lab).</p>
+</li>
+<li>
+<p>The lab's <strong>Access</strong> time is how long your lab resources will be available. If you finish your lab with access time still available, you will be able to explore the Google Cloud Platform or work on any section of the lab that was marked "if you have time". Once the Access time runs out, your lab will end and all resources will terminate.</p>
+</li>
+<li>
+<p>You <strong>DO NOT</strong> need a Google Cloud Platform account or project. An account, project and associated resources are provided to you as part of this lab.</p>
+</li>
+<li>
+<p>If you already have your own GCP account, make sure you do not use it for this lab.</p>
+</li>
+<li>
+<p>If your lab prompts you to log into the console, <strong>use only the student account provided to you by the lab</strong>. This prevents you from incurring charges for lab activities in your personal GCP account.</p>
+</li>
+</ul>
+<h4>Start your lab</h4>
+<p>When you are ready, click <strong>Start Lab</strong>. You can track your lab’s progress with the status bar at the top of your screen.</p>
+<aside>
+<strong>Important</strong> What is happening during this time?
+  Your lab is spinning up GCP resources for you behind the scenes, including an account, a project, resources within the project, and permission for you to control the resources needed to run the lab. This means that instead of spending time manually setting up a project and building resources from scratch as part of your lab, you can begin learning more quickly.
+
+</aside>
+<h4>Find Your Lab’s GCP Username and Password</h4>
+<p>To access the resources and console for this lab, locate the Connection Details panel in Qwiklabs.  Here you will find the account ID and password for the account you will use to log in to the Google Cloud Platform:</p>
+<p><img alt="Open Google Console" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/0d78dhX6IVMVWmixCPPSBbmi5O2GPokCXf1Ps1AkTgI="></p>
+<p>If your lab provides other resource identifiers or connection-related information, it will appear on this panel as well.</p>
+
+<h4>Log in to Google Cloud Console</h4>
+<p>Using the Qwiklabs browser tab/window or the separate browser you are using for the Qwiklabs session, copy the Username from the Connection Details panel and click the <strong>Open Google Console</strong> button.</p>
+<p>You'll be asked to Choose an account. Click <strong>Use another account</strong>.
+<img alt="Google_choose_Account" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/wNoohdL+wyBavWAhxkN5euPH2ulJhiOzoBlmi1+mGSw="></p>
+<p>Paste in the Username, and then the Password as prompted:</p>
+<p><img alt="Sign in to continue to Google Cloud Platform" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/rP81bHN99Vr7kaKU7fqy2IuSj1rjjNXkD1iunRSBWBw="></p>
+<p>Accept the terms and conditions.</p>
+<p>Since this is a temporary account, which you will only have to access for this one lab:</p>
+<ul>
+<li>Do not add recovery options</li>
+<li>Do not sign up for free trials</li>
+</ul>
+<aside>
+<strong>Note:</strong> You can view the list of services by clicking the GCP Navigation menu button at the top-left next to “Google Cloud Platform”.
+
+  <img alt="Cloud Console Menu" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/RIuVVYUkGtVaWhxtIFJugxyy_ORWQYw7OrLR0bJlReI=">
+</aside>
+
+<h3>Open BigQuery Console</h3>
+<p>In the Google Cloud Console, select <strong>Navigation menu</strong> &gt; <strong>BigQuery</strong>:</p>
+<p><img alt="BigQuery_menu.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/QwUX6algdXPgIThqBlgB2rnqGkoQUUANkl3xicD06uc="></p>
+<p>The <strong>Welcome to BigQuery in the Cloud Console</strong> message box opens. This message box provides a link to the quickstart guide and lists UI updates.</p>
+<p>Click <strong>Done</strong>.</p>
+
+<h2 id="step3">Minimize I/O</h2>
+<p>A query that computes the sum of three columns will be slower than a query that computes the sum of two columns, but most of the performance difference will be due to reading more data, not the extra addition. Therefore, a query that computes the mean of a column will be nearly as fast as a query whose aggregation method is to compute the variance of the data (even though computing variance requires BigQuery to keep track of both the sum and the sum of the squares) because most of the overhead of simple queries is caused by I/O, not by computation.</p>
+<h3>Be purposeful in SELECT</h3>
+<p>Because BigQuery uses columnar file formats, the fewer the columns that are read in a SELECT, the less the amount of data that needs to be read. In particular, doing a SELECT * reads every column of every row in the table, making it quite slow and expensive. The exception is when you use a SELECT * in a subquery, then only reference a few fields in an outer query; the BigQuery optimizer will be smart enough to only read the columns that are absolutely required.</p>
+<ol>
+<li>
+<p>Enter the following query in the BigQuery editor window:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  bike_id</span><span class="pun">,</span><span class="pln">
+  duration
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire
+ORDER BY
+  duration DESC
+LIMIT
+  </span><span class="lit">1</span></code><button class="button button--copy js-copy-button-0"><i class="fa fa-clipboard"></i></button></pre>
+<p>In the <strong>Query results</strong> window notice that the query completed in ~1.2s and processed ~372MB of data.</p>
+<ol start="2">
+<li>
+<p>Enter the following query in the BigQuery editor window:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  </span><span class="pun">*</span><span class="pln">
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire
+ORDER BY
+  duration DESC
+LIMIT
+  </span><span class="lit">1</span></code><button class="button button--copy js-copy-button-1"><i class="fa fa-clipboard"></i></button></pre>
+<p>In the <strong>Query results</strong> window notice that this query completed in ~4.5s and consumed ~2.6GB of data. Much longer!</p>
+<p>If you require nearly all the columns in a table, consider using <code>SELECT * EXCEPT</code> so as to not read the ones you don’t require.</p>
+<h3>Reduce data being read</h3>
+<p>When tuning a query, it is important to start with the data that is being read and consider whether it is possible to reduce this. Suppose we wish to find the typical duration of the most common one-way rentals.</p>
+<ol>
+<li>
+<p>Enter the following query into the BigQuery editor window:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  MIN</span><span class="pun">(</span><span class="pln">start_station_name</span><span class="pun">)</span><span class="pln"> AS start_station_name</span><span class="pun">,</span><span class="pln">
+  MIN</span><span class="pun">(</span><span class="pln">end_station_name</span><span class="pun">)</span><span class="pln"> AS end_station_name</span><span class="pun">,</span><span class="pln">
+  APPROX_QUANTILES</span><span class="pun">(</span><span class="pln">duration</span><span class="pun">,</span><span class="pln"> </span><span class="lit">10</span><span class="pun">)[</span><span class="pln">OFFSET </span><span class="pun">(</span><span class="lit">5</span><span class="pun">)]</span><span class="pln"> AS typical_duration</span><span class="pun">,</span><span class="pln">
+  COUNT</span><span class="pun">(</span><span class="pln">duration</span><span class="pun">)</span><span class="pln"> AS num_trips
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire
+WHERE
+  start_station_id </span><span class="pun">!=</span><span class="pln"> end_station_id
+GROUP BY
+  start_station_id</span><span class="pun">,</span><span class="pln">
+  end_station_id
+ORDER BY
+  num_trips DESC
+LIMIT
+  </span><span class="lit">10</span></code><button class="button button--copy js-copy-button-2"><i class="fa fa-clipboard"></i></button></pre>
+<p>The output of your query should look similar to the following:</p>
+<p><img alt="1.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/w1OICOPlBwD39TDdWQcqdsmlna49AsHdXEcDOqXUlmc="></p>
+<ol start="2">
+<li>Click on the <strong>Execution details</strong> tab of the <strong>Query results</strong> window.</li>
+</ol>
+<p><img alt="2.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/LsZUwDsB0OhVgMbJrn_Ar0nSpntZZGqfb5wQmqSC0nk="></p>
+<p>The details of the query indicate that the sorting (for the approximate quantiles for every station pair) required a repartition of the outputs of the input stage but most of the time is spent during computation.</p>
+<ol start="3">
+<li>
+<p>We can reduce the I/O overhead of the query if we do the filtering and grouping using the station name rather than the station id since we will need to read fewer columns. Execute the following query:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  start_station_name</span><span class="pun">,</span><span class="pln">
+  end_station_name</span><span class="pun">,</span><span class="pln">
+  APPROX_QUANTILES</span><span class="pun">(</span><span class="pln">duration</span><span class="pun">,</span><span class="pln"> </span><span class="lit">10</span><span class="pun">)[</span><span class="pln">OFFSET</span><span class="pun">(</span><span class="lit">5</span><span class="pun">)]</span><span class="pln"> AS typical_duration</span><span class="pun">,</span><span class="pln">
+  COUNT</span><span class="pun">(</span><span class="pln">duration</span><span class="pun">)</span><span class="pln"> AS num_trips
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire
+WHERE
+  start_station_name </span><span class="pun">!=</span><span class="pln"> end_station_name
+GROUP BY
+  start_station_name</span><span class="pun">,</span><span class="pln">
+  end_station_name
+ORDER BY
+  num_trips DESC
+LIMIT
+  </span><span class="lit">10</span></code><button class="button button--copy js-copy-button-3"><i class="fa fa-clipboard"></i></button></pre>
+<p>The above query avoids the need to read the two id columns and finishes in 10.8 seconds. This speedup is caused by the downstream effects of reading less data.</p>
+<p><img alt="3.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/rf9CwPcBqRziVXPZuHqYFsMlCyqrTvnXS0UUvuPNUWM="></p>
+<p>The query result remains the same since there is a 1:1 relationship between the station name and the station id.</p>
+<h3>Reduce number of expensive computations</h3>
+<p>Suppose we wish to find the total distance traveled by each bicycle in our dataset.</p>
+<ol>
+<li>
+<p>A naive way to do this would be to find the distance traveled in each trip undertaken by each bicycle and sum them up:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">WITH
+  trip_distance AS </span><span class="pun">(</span><span class="pln">
+SELECT
+  bike_id</span><span class="pun">,</span><span class="pln">
+  ST_Distance</span><span class="pun">(</span><span class="pln">ST_GeogPoint</span><span class="pun">(</span><span class="pln">s</span><span class="pun">.</span><span class="pln">longitude</span><span class="pun">,</span><span class="pln">
+      s</span><span class="pun">.</span><span class="pln">latitude</span><span class="pun">),</span><span class="pln">
+    ST_GeogPoint</span><span class="pun">(</span><span class="pln">e</span><span class="pun">.</span><span class="pln">longitude</span><span class="pun">,</span><span class="pln">
+      e</span><span class="pun">.</span><span class="pln">latitude</span><span class="pun">))</span><span class="pln"> AS distance
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire</span><span class="pun">,</span><span class="pln">
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_stations s</span><span class="pun">,</span><span class="pln">
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_stations e
+WHERE
+  start_station_id </span><span class="pun">=</span><span class="pln"> s</span><span class="pun">.</span><span class="pln">id
+  AND end_station_id </span><span class="pun">=</span><span class="pln"> e</span><span class="pun">.</span><span class="pln">id </span><span class="pun">)</span><span class="pln">
+SELECT
+  bike_id</span><span class="pun">,</span><span class="pln">
+  SUM</span><span class="pun">(</span><span class="pln">distance</span><span class="pun">)/</span><span class="lit">1000</span><span class="pln"> AS total_distance
+FROM
+  trip_distance
+GROUP BY
+  bike_id
+ORDER BY
+  total_distance DESC
+LIMIT
+  </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-4"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="4.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/aS1KuNZDksjrAydT1AYbsB0NuEOaV7d4IdcqK00WGHc="></p>
+<p>The above query takes 9.8 seconds (55 seconds of slot time) and shuffles 1.22 MB. The result is that some bicycles have been ridden nearly 6000 kilometers.</p>
+<ol start="2">
+<li>
+<p>Computing the distance is a pretty expensive operation and we can avoid joining the <code>cycle_stations</code> table against the <code>cycle_hire table</code> if we precompute the distances between all pairs of stations:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">WITH
+  stations AS </span><span class="pun">(</span><span class="pln">
+SELECT
+  s</span><span class="pun">.</span><span class="pln">id AS start_id</span><span class="pun">,</span><span class="pln">
+  e</span><span class="pun">.</span><span class="pln">id AS end_id</span><span class="pun">,</span><span class="pln">
+  ST_Distance</span><span class="pun">(</span><span class="pln">ST_GeogPoint</span><span class="pun">(</span><span class="pln">s</span><span class="pun">.</span><span class="pln">longitude</span><span class="pun">,</span><span class="pln">
+      s</span><span class="pun">.</span><span class="pln">latitude</span><span class="pun">),</span><span class="pln">
+    ST_GeogPoint</span><span class="pun">(</span><span class="pln">e</span><span class="pun">.</span><span class="pln">longitude</span><span class="pun">,</span><span class="pln">
+      e</span><span class="pun">.</span><span class="pln">latitude</span><span class="pun">))</span><span class="pln"> AS distance
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_stations s</span><span class="pun">,</span><span class="pln">
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_stations e </span><span class="pun">),</span><span class="pln">
+trip_distance AS </span><span class="pun">(</span><span class="pln">
+SELECT
+  bike_id</span><span class="pun">,</span><span class="pln">
+  distance
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire</span><span class="pun">,</span><span class="pln">
+  stations
+WHERE
+  start_station_id </span><span class="pun">=</span><span class="pln"> start_id
+  AND end_station_id </span><span class="pun">=</span><span class="pln"> end_id </span><span class="pun">)</span><span class="pln">
+SELECT
+  bike_id</span><span class="pun">,</span><span class="pln">
+  SUM</span><span class="pun">(</span><span class="pln">distance</span><span class="pun">)/</span><span class="lit">1000</span><span class="pln"> AS total_distance
+FROM
+  trip_distance
+GROUP BY
+  bike_id
+ORDER BY
+  total_distance DESC
+LIMIT
+  </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-5"><i class="fa fa-clipboard"></i></button></pre>
+<p>Now, the query only takes 31.5 seconds of slot time (a 30% speedup) due to having to shuffle only 33.44 MB (a 6x reduction in resource consumption).</p>
+<p>Click Check my progress to verify the objective.</p>
+<ql-activity-tracking step="1">
+      Minimize I/O
+  </ql-activity-tracking>
+<h2 id="step4">Cache results of previous queries</h2>
+<p>The BigQuery service automatically caches query results in a temporary table. If the identical query is submitted within approximately 24 hours, the results are served from this temporary table without any recomputation. Cached results are extremely fast and do not incur charges.</p>
+<p>There are, however, a few caveats to be aware of. Query caching is based on exact string comparison. So even whitespaces can cause a cache miss. Queries are never cached if they exhibit non-deterministic behavior (for example, they use CURRENT_TIMESTAMP or RAND), if the table or view being queried has changed (even if the columns/rows of interest to the query are unchanged), if the table is associated with a streaming buffer (even if there are no new rows), if the query uses DML statements, or queries external data sources.</p>
+<h3>Cache intermediate results</h3>
+<p>It is possible to improve overall performance at the expense of increased I/O by taking advantage of temporary tables and materialized views.</p>
+<ol>
+<li>For example, suppose you have a number of queries that start out by finding the typical duration of trips between a pair of stations. The WITH clause (also called a Common Table Expression) improves readability but does not improve query speed or cost since results are not cached. The same holds for views and subqueries as well. If you find yourself using a WITH clause, view, or a subquery often, one way to potentially improve performance is to store the result into a table (or materialized view).</li>
+</ol>
+<p>First you will need to create a dataset named  <code>mydataset</code>  in the <code>EU</code> region (where the bicycle data resides) under your project in BigQuery.</p>
+<p>a) In the left pane in the <strong>Resources</strong> section, click on your BigQuery project (<code>qwiklabs-gcp-xxxx</code>).
+b) To the right, under the Query editor, click <strong>CREATE DATASET</strong>.</p>
+<p><img alt="5fce8105cf381420.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/VLtojAawcq9BhGzT7Bu_QstCbmn1j3hglRUI0XZfZjM="></p>
+<p>The <strong>Create dataset</strong> dialog opens.</p>
+<p>c) Set the <em>Dataset ID</em> to <code>mydataset</code>.
+d) Set the <em>Data location</em> to <code>European Union (EU)</code>.
+e) Leave all other options at their default values.
+f) To finish, click the blue <strong>Create dataset</strong> button.</p>
+<p><img alt="mydataset_eu.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/ENATLCIqpKy07JghlKjgp0M2kFtL_T7szcoRIWxywa8="></p>
+<p>Now you may execute the following query:</p>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">CREATE OR REPLACE TABLE
+  mydataset</span><span class="pun">.</span><span class="pln">typical_trip AS
+SELECT
+  start_station_name</span><span class="pun">,</span><span class="pln">
+  end_station_name</span><span class="pun">,</span><span class="pln">
+  APPROX_QUANTILES</span><span class="pun">(</span><span class="pln">duration</span><span class="pun">,</span><span class="pln"> </span><span class="lit">10</span><span class="pun">)[</span><span class="pln">OFFSET </span><span class="pun">(</span><span class="lit">5</span><span class="pun">)]</span><span class="pln"> AS typical_duration</span><span class="pun">,</span><span class="pln">
+  COUNT</span><span class="pun">(</span><span class="pln">duration</span><span class="pun">)</span><span class="pln"> AS num_trips
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire
+GROUP BY
+  start_station_name</span><span class="pun">,</span><span class="pln">
+  end_station_name</span></code><button class="button button--copy js-copy-button-6"><i class="fa fa-clipboard"></i></button></pre>
+<ol start="2">
+<li>
+<p>Use the table created to find days when bicycle trips are much longer than usual:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  EXTRACT </span><span class="pun">(</span><span class="pln">DATE
+  FROM
+    start_date</span><span class="pun">)</span><span class="pln"> AS trip_date</span><span class="pun">,</span><span class="pln">
+  APPROX_QUANTILES</span><span class="pun">(</span><span class="pln">duration </span><span class="pun">/</span><span class="pln"> typical_duration</span><span class="pun">,</span><span class="pln"> </span><span class="lit">10</span><span class="pun">)[</span><span class="pln">OFFSET</span><span class="pun">(</span><span class="lit">5</span><span class="pun">)]</span><span class="pln"> AS ratio</span><span class="pun">,</span><span class="pln">
+  COUNT</span><span class="pun">(*)</span><span class="pln"> AS num_trips_on_day
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire AS hire
+JOIN
+  mydataset</span><span class="pun">.</span><span class="pln">typical_trip AS trip
+ON
+  hire</span><span class="pun">.</span><span class="pln">start_station_name </span><span class="pun">=</span><span class="pln"> trip</span><span class="pun">.</span><span class="pln">start_station_name
+  AND hire</span><span class="pun">.</span><span class="pln">end_station_name </span><span class="pun">=</span><span class="pln"> trip</span><span class="pun">.</span><span class="pln">end_station_name
+  AND num_trips </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">10</span><span class="pln">
+GROUP BY
+  trip_date
+HAVING
+  num_trips_on_day </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">10</span><span class="pln">
+ORDER BY
+  ratio DESC
+LIMIT
+  </span><span class="lit">10</span></code><button class="button button--copy js-copy-button-7"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="6.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/ivoHHeR6VRg_YbZiySRzY22wcUfbmVqCm9huSRqgH+o="></p>
+<ol start="3">
+<li>
+<p>Use the WITH clause to find days when bicycle trips are much longer than usual:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">WITH
+typical_trip AS </span><span class="pun">(</span><span class="pln">
+SELECT
+  start_station_name</span><span class="pun">,</span><span class="pln">
+  end_station_name</span><span class="pun">,</span><span class="pln">
+  APPROX_QUANTILES</span><span class="pun">(</span><span class="pln">duration</span><span class="pun">,</span><span class="pln"> </span><span class="lit">10</span><span class="pun">)[</span><span class="pln">OFFSET </span><span class="pun">(</span><span class="lit">5</span><span class="pun">)]</span><span class="pln"> AS typical_duration</span><span class="pun">,</span><span class="pln">
+  COUNT</span><span class="pun">(</span><span class="pln">duration</span><span class="pun">)</span><span class="pln"> AS num_trips
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire
+GROUP BY
+  start_station_name</span><span class="pun">,</span><span class="pln">
+  end_station_name </span><span class="pun">)</span><span class="pln">
+SELECT
+  EXTRACT </span><span class="pun">(</span><span class="pln">DATE
+  FROM
+    start_date</span><span class="pun">)</span><span class="pln"> AS trip_date</span><span class="pun">,</span><span class="pln">
+  APPROX_QUANTILES</span><span class="pun">(</span><span class="pln">duration </span><span class="pun">/</span><span class="pln"> typical_duration</span><span class="pun">,</span><span class="pln"> </span><span class="lit">10</span><span class="pun">)[</span><span class="pln">
+OFFSET
+  </span><span class="pun">(</span><span class="lit">5</span><span class="pun">)]</span><span class="pln"> AS ratio</span><span class="pun">,</span><span class="pln">
+  COUNT</span><span class="pun">(*)</span><span class="pln"> AS num_trips_on_day
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire AS hire
+JOIN
+  typical_trip AS trip
+ON
+  hire</span><span class="pun">.</span><span class="pln">start_station_name </span><span class="pun">=</span><span class="pln"> trip</span><span class="pun">.</span><span class="pln">start_station_name
+  AND hire</span><span class="pun">.</span><span class="pln">end_station_name </span><span class="pun">=</span><span class="pln"> trip</span><span class="pun">.</span><span class="pln">end_station_name
+  AND num_trips </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">10</span><span class="pln">
+GROUP BY
+  trip_date
+HAVING
+  num_trips_on_day </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">10</span><span class="pln">
+ORDER BY
+  ratio DESC
+LIMIT
+</span><span class="lit">10</span></code><button class="button button--copy js-copy-button-8"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="5.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/KNcOCA6vTh15jS4wKHUUYgcLJfXwMCPk+VqBzx5KxxA="></p>
+<p>Notice the ~50% speedup since the average trip duration computation is avoided. Both queries return the same result, that trips on Christmas take longer than usual. Note, the table <code>mydataset.typical_trip</code> is not refreshed when new data is added to the <code>cycle_hire</code> table. One way to solve this problem of stale data is to use a materialized view or to schedule queries to update the table periodically. You should measure the cost of such updates to see whether the improvement in query performance makes up for the extra cost of maintaining the table or materialized view up-to-date.</p>
+<h3>Accelerate queries with BI Engine</h3>
+<p>If there are tables that you access frequently in Business Intelligence (BI) settings such as dashboards with aggregations and filters, one way to speed up your queries is to employ <strong>BI Engine</strong>. It will automatically store relevant pieces of data in memory (either actual columns from the table or derived results), and will use a specialized query processor tuned for working with mostly in-memory data. You can reserve the amount of memory (up to a current maximum of 10 GB) that BigQuery should use for its cache from the BigQuery Admin Console, under <strong>BI Engine</strong>.</p>
+<p>Make sure to reserve this memory in the same region as the dataset you are querying. Then, BigQuery will start to cache tables, parts of tables, and aggregations in memory and serve results faster.</p>
+<p>A primary use case for BI Engine is for tables that are accessed from dashboard tools such as Google Data Studio. By providing memory allocation for a BI Engine reservation, we can make dashboards that rely on a BigQuery backend much more responsive.</p>
+<p>Click Check my progress to verify the objective.</p>
+<ql-activity-tracking step="2">
+      Cache results of previous queries
+  </ql-activity-tracking>
+<h2 id="step5">Efficient joins</h2>
+<p>Joining two tables requires data coordination and is subject to limitations imposed by the communication bandwidth between slots. If it is possible to avoid a join, or reduce the amount of data being joined, do so.</p>
+<h3>Denormalization</h3>
+<p>One way to improve the read performance and avoid joins is to give up on storing data efficiently, and instead add redundant copies of data. This is called denormalization.</p>
+<ol>
+<li>
+<p>Thus, instead of storing the bicycle station latitudes and longitudes separately from the cycle hire information, we could create a denormalized table:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">CREATE OR REPLACE TABLE
+  mydataset</span><span class="pun">.</span><span class="pln">london_bicycles_denorm AS
+SELECT
+  start_station_id</span><span class="pun">,</span><span class="pln">
+  s</span><span class="pun">.</span><span class="pln">latitude AS start_latitude</span><span class="pun">,</span><span class="pln">
+  s</span><span class="pun">.</span><span class="pln">longitude AS start_longitude</span><span class="pun">,</span><span class="pln">
+  end_station_id</span><span class="pun">,</span><span class="pln">
+  e</span><span class="pun">.</span><span class="pln">latitude AS end_latitude</span><span class="pun">,</span><span class="pln">
+  e</span><span class="pun">.</span><span class="pln">longitude AS end_longitude
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire AS h
+JOIN
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_stations AS s
+ON
+  h</span><span class="pun">.</span><span class="pln">start_station_id </span><span class="pun">=</span><span class="pln"> s</span><span class="pun">.</span><span class="pln">id
+JOIN
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_stations AS e
+ON
+  h</span><span class="pun">.</span><span class="pln">end_station_id </span><span class="pun">=</span><span class="pln"> e</span><span class="pun">.</span><span class="pln">id</span></code><button class="button button--copy js-copy-button-9"><i class="fa fa-clipboard"></i></button></pre>
+<p>Then, all subsequent queries will not need to carry out the join because the table will contain the necessary location information for all trips. In this case, you are trading off storage and reading more data against the computational expense of a join. It is quite possible that the cost of reading more data from disk will outweigh the cost of the join -- you should measure whether denormalization brings performance benefits.</p>
+<p>Click Check my progress to verify the objective.</p>
+<ql-activity-tracking step="3">
+      Denormalization
+  </ql-activity-tracking>
+<h3>Avoid self-joins of large tables</h3>
+<p>Self-joins happen when a table is joined with itself. While BigQuery supports self-joins, they can lead to performance degradation if the table being joined with itself is very large. In many cases, you can avoid the self-join by taking advantage of SQL features such as aggregation and window functions.</p>
+<ol>
+<li>
+<p>Let’s look at an example. One of the BigQuery public datasets is the dataset of baby names published by the US Social Security Administration. It is possible to query the dataset to find the most common male names in 2015 in the state of Massachusetts (Make sure your query is running in the <code>US</code> region by selecting <strong>More</strong> &gt; <strong>Query settings</strong> &gt; <strong>Processing location</strong>):</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  name</span><span class="pun">,</span><span class="pln">
+  number AS num_babies
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">usa_names</span><span class="pun">.</span><span class="pln">usa_1910_current
+WHERE
+  gender </span><span class="pun">=</span><span class="pln"> </span><span class="str">'M'</span><span class="pln">
+  AND year </span><span class="pun">=</span><span class="pln"> </span><span class="lit">2015</span><span class="pln">
+  AND state </span><span class="pun">=</span><span class="pln"> </span><span class="str">'MA'</span><span class="pln">
+ORDER BY
+  num_babies DESC
+LIMIT
+  </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-10"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="7.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/RVMvR4_VH6tIr_anBzTP8j3A2emvXnCLULJXqdUEBZw="></p>
+<ol start="2">
+<li>Similarly, query the dataset to find the most common female names in 2015 in the state of Massachusetts:</li>
+</ol>
+<p><img alt="8.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/rWO89zbfs5ELZ1hEmthfYvNATfW2xvPgUR7zO4NRl7M="></p>
+<ol start="3">
+<li>
+<p>What are the most common names assigned to both male and female babies in the country over all the years in the dataset? A naive way to solve this problem involves reading the input table twice and doing a self-join:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">WITH
+male_babies AS </span><span class="pun">(</span><span class="pln">
+SELECT
+  name</span><span class="pun">,</span><span class="pln">
+  number AS num_babies
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">usa_names</span><span class="pun">.</span><span class="pln">usa_1910_current
+WHERE
+  gender </span><span class="pun">=</span><span class="pln"> </span><span class="str">'M'</span><span class="pln"> </span><span class="pun">),</span><span class="pln">
+female_babies AS </span><span class="pun">(</span><span class="pln">
+SELECT
+  name</span><span class="pun">,</span><span class="pln">
+  number AS num_babies
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">usa_names</span><span class="pun">.</span><span class="pln">usa_1910_current
+WHERE
+  gender </span><span class="pun">=</span><span class="pln"> </span><span class="str">'F'</span><span class="pln"> </span><span class="pun">),</span><span class="pln">
+both_genders AS </span><span class="pun">(</span><span class="pln">
+SELECT
+  name</span><span class="pun">,</span><span class="pln">
+  SUM</span><span class="pun">(</span><span class="pln">m</span><span class="pun">.</span><span class="pln">num_babies</span><span class="pun">)</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> SUM</span><span class="pun">(</span><span class="pln">f</span><span class="pun">.</span><span class="pln">num_babies</span><span class="pun">)</span><span class="pln"> AS num_babies</span><span class="pun">,</span><span class="pln">
+  SUM</span><span class="pun">(</span><span class="pln">m</span><span class="pun">.</span><span class="pln">num_babies</span><span class="pun">)</span><span class="pln"> </span><span class="pun">/</span><span class="pln"> </span><span class="pun">(</span><span class="pln">SUM</span><span class="pun">(</span><span class="pln">m</span><span class="pun">.</span><span class="pln">num_babies</span><span class="pun">)</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> SUM</span><span class="pun">(</span><span class="pln">f</span><span class="pun">.</span><span class="pln">num_babies</span><span class="pun">))</span><span class="pln"> AS frac_male
+FROM
+  male_babies AS m
+JOIN
+  female_babies AS f
+USING
+  </span><span class="pun">(</span><span class="pln">name</span><span class="pun">)</span><span class="pln">
+GROUP BY
+  name </span><span class="pun">)</span><span class="pln">
+SELECT
+  </span><span class="pun">*</span><span class="pln">
+FROM
+  both_genders
+WHERE
+  frac_male BETWEEN </span><span class="lit">0.3</span><span class="pln">
+  AND </span><span class="lit">0.7</span><span class="pln">
+ORDER BY
+  num_babies DESC
+LIMIT
+  </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-11"><i class="fa fa-clipboard"></i></button></pre>
+<p>This took 74 seconds and yielded:</p>
+<p><img alt="9.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/4L4R0uX8T8NffH1L5yHbt7ejUte6HamV8nFUoP44FE4="></p>
+<p>To add insult to injury, the answer is also wrong -- as much as we like the name Jordan, the entire US population is only 300 million, so there cannot have been 982 million babies with that name. The self-JOIN unfortunately joins across state and year boundaries.</p>
+<ol start="4">
+<li>
+<p>A faster, more elegant (and correct!) solution is to recast the query to read the input only once and avoid the self-join completely.</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">WITH
+all_babies AS </span><span class="pun">(</span><span class="pln">
+SELECT
+  name</span><span class="pun">,</span><span class="pln">
+  SUM</span><span class="pun">(</span><span class="pln">
+  IF
+    </span><span class="pun">(</span><span class="pln">gender </span><span class="pun">=</span><span class="pln"> </span><span class="str">'M'</span><span class="pun">,</span><span class="pln">
+      number</span><span class="pun">,</span><span class="pln">
+      </span><span class="lit">0</span><span class="pun">))</span><span class="pln"> AS male_babies</span><span class="pun">,</span><span class="pln">
+  SUM</span><span class="pun">(</span><span class="pln">
+  IF
+    </span><span class="pun">(</span><span class="pln">gender </span><span class="pun">=</span><span class="pln"> </span><span class="str">'F'</span><span class="pun">,</span><span class="pln">
+      number</span><span class="pun">,</span><span class="pln">
+      </span><span class="lit">0</span><span class="pun">))</span><span class="pln"> AS female_babies
+FROM
+  </span><span class="str">`bigquery-public-data.usa_names.usa_1910_current`</span><span class="pln">
+GROUP BY
+  name </span><span class="pun">),</span><span class="pln">
+both_genders AS </span><span class="pun">(</span><span class="pln">
+SELECT
+  name</span><span class="pun">,</span><span class="pln">
+  </span><span class="pun">(</span><span class="pln">male_babies </span><span class="pun">+</span><span class="pln"> female_babies</span><span class="pun">)</span><span class="pln"> AS num_babies</span><span class="pun">,</span><span class="pln">
+  SAFE_DIVIDE</span><span class="pun">(</span><span class="pln">male_babies</span><span class="pun">,</span><span class="pln">
+    male_babies </span><span class="pun">+</span><span class="pln"> female_babies</span><span class="pun">)</span><span class="pln"> AS frac_male
+FROM
+  all_babies
+WHERE
+  male_babies </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">0</span><span class="pln">
+  AND female_babies </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">0</span><span class="pln"> </span><span class="pun">)</span><span class="pln">
+SELECT
+  </span><span class="pun">*</span><span class="pln">
+FROM
+  both_genders
+WHERE
+  frac_male BETWEEN </span><span class="lit">0.3</span><span class="pln">
+  AND </span><span class="lit">0.7</span><span class="pln">
+ORDER BY
+  num_babies DESC
+LIMIT
+  </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-12"><i class="fa fa-clipboard"></i></button></pre>
+<p>This took only 2.4 seconds, a 30x speedup.</p>
+<h3>Reduce data being joined</h3>
+<p>It is possible to carry out the query above with an efficient join as long as we reduce the amount of data being joined by grouping the data by name and gender early on:</p>
+<ol>
+<li>
+<p>Try the following query:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">WITH
+all_names AS </span><span class="pun">(</span><span class="pln">
+SELECT
+  name</span><span class="pun">,</span><span class="pln">
+  gender</span><span class="pun">,</span><span class="pln">
+  SUM</span><span class="pun">(</span><span class="pln">number</span><span class="pun">)</span><span class="pln"> AS num_babies
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">usa_names</span><span class="pun">.</span><span class="pln">usa_1910_current
+GROUP BY
+  name</span><span class="pun">,</span><span class="pln">
+  gender </span><span class="pun">),</span><span class="pln">
+male_names AS </span><span class="pun">(</span><span class="pln">
+SELECT
+  name</span><span class="pun">,</span><span class="pln">
+  num_babies
+FROM
+  all_names
+WHERE
+  gender </span><span class="pun">=</span><span class="pln"> </span><span class="str">'M'</span><span class="pln"> </span><span class="pun">),</span><span class="pln">
+female_names AS </span><span class="pun">(</span><span class="pln">
+SELECT
+  name</span><span class="pun">,</span><span class="pln">
+  num_babies
+FROM
+  all_names
+WHERE
+  gender </span><span class="pun">=</span><span class="pln"> </span><span class="str">'F'</span><span class="pln"> </span><span class="pun">),</span><span class="pln">
+ratio AS </span><span class="pun">(</span><span class="pln">
+SELECT
+  name</span><span class="pun">,</span><span class="pln">
+  </span><span class="pun">(</span><span class="pln">f</span><span class="pun">.</span><span class="pln">num_babies </span><span class="pun">+</span><span class="pln"> m</span><span class="pun">.</span><span class="pln">num_babies</span><span class="pun">)</span><span class="pln"> AS num_babies</span><span class="pun">,</span><span class="pln">
+  m</span><span class="pun">.</span><span class="pln">num_babies </span><span class="pun">/</span><span class="pln"> </span><span class="pun">(</span><span class="pln">f</span><span class="pun">.</span><span class="pln">num_babies </span><span class="pun">+</span><span class="pln"> m</span><span class="pun">.</span><span class="pln">num_babies</span><span class="pun">)</span><span class="pln"> AS frac_male
+FROM
+  male_names AS m
+JOIN
+  female_names AS f
+USING
+  </span><span class="pun">(</span><span class="pln">name</span><span class="pun">)</span><span class="pln"> </span><span class="pun">)</span><span class="pln">
+SELECT
+  </span><span class="pun">*</span><span class="pln">
+FROM
+  ratio
+WHERE
+  frac_male BETWEEN </span><span class="lit">0.3</span><span class="pln">
+  AND </span><span class="lit">0.7</span><span class="pln">
+ORDER BY
+  num_babies DESC
+LIMIT
+  </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-13"><i class="fa fa-clipboard"></i></button></pre>
+<p>The early grouping served to trim the data early in the query, before the query performs a JOIN. That way, shuffling and other complex operations only executed on the much smaller data and remain quite efficient. The query above finished in 2 seconds and returned the correct result.</p>
+<h3>Use a window function instead of a self-join</h3>
+<p>Suppose you wish to find the duration between a bike being dropped off and it being rented again, i.e., the duration that a bicycle stays at the station.  This is an example of a dependent relationship between rows. It might appear that the only way to solve this is to join the table with itself, matching the <code>end_date</code> of one trip against the <code>start_date</code> of the next.</p>
+<ol>
+<li>
+<p>You can, however, avoid a self-join by using a window function:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  bike_id</span><span class="pun">,</span><span class="pln">
+  start_date</span><span class="pun">,</span><span class="pln">
+  end_date</span><span class="pun">,</span><span class="pln">
+  TIMESTAMP_DIFF</span><span class="pun">(</span><span class="pln"> start_date</span><span class="pun">,</span><span class="pln"> LAG</span><span class="pun">(</span><span class="pln">end_date</span><span class="pun">)</span><span class="pln"> OVER </span><span class="pun">(</span><span class="pln">PARTITION BY bike_id ORDER BY start_date</span><span class="pun">),</span><span class="pln"> SECOND</span><span class="pun">)</span><span class="pln"> AS time_at_station
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire
+LIMIT
+  </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-14"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="10.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/R0gLghU1fmh1PEIYrNIcCXGLl4Ye+IgRQXqbeIoFwBA="></p>
+<p>Notice that the first row has a <code>null</code> for <code>time_at_station</code> since we don’t have a timestamp for the previous dropoff. After that, the <code>time_at_station</code> tracks the difference between the previous dropoff and the current pickup.</p>
+<ol start="2">
+<li>
+<p>Using this, we can compute the average time that a bicycle is unused at each station and rank stations by that measure:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">WITH
+unused AS </span><span class="pun">(</span><span class="pln">
+  SELECT
+    bike_id</span><span class="pun">,</span><span class="pln">
+    start_station_name</span><span class="pun">,</span><span class="pln">
+    start_date</span><span class="pun">,</span><span class="pln">
+    end_date</span><span class="pun">,</span><span class="pln">
+    TIMESTAMP_DIFF</span><span class="pun">(</span><span class="pln">start_date</span><span class="pun">,</span><span class="pln"> LAG</span><span class="pun">(</span><span class="pln">end_date</span><span class="pun">)</span><span class="pln"> OVER </span><span class="pun">(</span><span class="pln">PARTITION BY bike_id ORDER BY start_date</span><span class="pun">),</span><span class="pln"> SECOND</span><span class="pun">)</span><span class="pln"> AS time_at_station
+  FROM
+    </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire </span><span class="pun">)</span><span class="pln">
+SELECT
+  start_station_name</span><span class="pun">,</span><span class="pln">
+  AVG</span><span class="pun">(</span><span class="pln">time_at_station</span><span class="pun">)</span><span class="pln"> AS unused_seconds
+FROM
+  unused
+GROUP BY
+  start_station_name
+ORDER BY
+  unused_seconds ASC
+LIMIT
+  </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-15"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="11.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/FQu3XM8fb_dFEKbooFvzlvT64jxTaKzy0Y2Wf2gYifs="></p>
+<h3>Join with precomputed values</h3>
+<p>Sometimes, it can be helpful to precompute functions on smaller tables, and then join with the precomputed values rather than repeat an expensive calculation each time.</p>
+<p>For example, suppose we wish to find the pair of stations between which our customers ride bicycles at the fastest pace. To compute the pace (minutes per kilometer) at which they ride, we need to divide the duration of the ride by the distance between stations.</p>
+<ol>
+<li>
+<p>We could create a denormalized table with distances between stations and then compute the average pace:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">WITH
+  denormalized_table AS </span><span class="pun">(</span><span class="pln">
+  SELECT
+    start_station_name</span><span class="pun">,</span><span class="pln">
+    end_station_name</span><span class="pun">,</span><span class="pln">
+    ST_DISTANCE</span><span class="pun">(</span><span class="pln">ST_GeogPoint</span><span class="pun">(</span><span class="pln">s1</span><span class="pun">.</span><span class="pln">longitude</span><span class="pun">,</span><span class="pln">
+        s1</span><span class="pun">.</span><span class="pln">latitude</span><span class="pun">),</span><span class="pln">
+      ST_GeogPoint</span><span class="pun">(</span><span class="pln">s2</span><span class="pun">.</span><span class="pln">longitude</span><span class="pun">,</span><span class="pln">
+        s2</span><span class="pun">.</span><span class="pln">latitude</span><span class="pun">))</span><span class="pln"> AS distance</span><span class="pun">,</span><span class="pln">
+    duration
+  FROM
+    </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire AS h
+  JOIN
+    </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_stations AS s1
+  ON
+    h</span><span class="pun">.</span><span class="pln">start_station_id </span><span class="pun">=</span><span class="pln"> s1</span><span class="pun">.</span><span class="pln">id
+  JOIN
+    </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_stations AS s2
+  ON
+    h</span><span class="pun">.</span><span class="pln">end_station_id </span><span class="pun">=</span><span class="pln"> s2</span><span class="pun">.</span><span class="pln">id </span><span class="pun">),</span><span class="pln">
+  durations AS </span><span class="pun">(</span><span class="pln">
+  SELECT
+    start_station_name</span><span class="pun">,</span><span class="pln">
+    end_station_name</span><span class="pun">,</span><span class="pln">
+    MIN</span><span class="pun">(</span><span class="pln">distance</span><span class="pun">)</span><span class="pln"> AS distance</span><span class="pun">,</span><span class="pln">
+    AVG</span><span class="pun">(</span><span class="pln">duration</span><span class="pun">)</span><span class="pln"> AS duration</span><span class="pun">,</span><span class="pln">
+    COUNT</span><span class="pun">(*)</span><span class="pln"> AS num_rides
+  FROM
+    denormalized_table
+  WHERE
+    duration </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">0</span><span class="pln">
+    AND distance </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">0</span><span class="pln">
+  GROUP BY
+    start_station_name</span><span class="pun">,</span><span class="pln">
+    end_station_name
+  HAVING
+    num_rides </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">100</span><span class="pln"> </span><span class="pun">)</span><span class="pln">
+SELECT
+  start_station_name</span><span class="pun">,</span><span class="pln">
+  end_station_name</span><span class="pun">,</span><span class="pln">
+  distance</span><span class="pun">,</span><span class="pln">
+  duration</span><span class="pun">,</span><span class="pln">
+  duration</span><span class="pun">/</span><span class="pln">distance AS pace
+FROM
+  durations
+ORDER BY
+  pace ASC
+LIMIT
+  </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-16"><i class="fa fa-clipboard"></i></button></pre>
+<p>The above query invokes the geospatial function <code>ST_DISTANCE</code> once for each row in the <code>cycle_hire</code> table (24 million times), takes 14.7 seconds and processes 1.9 GB.</p>
+<p><img alt="12.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/c_DP_joG661bXXQdgu8KPZOMQaQeCtEOFCMVFFPmsAI="></p>
+<ol start="2">
+<li>
+<p>Alternately, we can use the <code>cycle_stations</code> table to precompute the distance between every pair of stations (this is a self-join) and then join it with the reduced-size table of average duration between stations:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">WITH
+  distances AS </span><span class="pun">(</span><span class="pln">
+  SELECT
+    a</span><span class="pun">.</span><span class="pln">id AS start_station_id</span><span class="pun">,</span><span class="pln">
+    a</span><span class="pun">.</span><span class="pln">name AS start_station_name</span><span class="pun">,</span><span class="pln">
+    b</span><span class="pun">.</span><span class="pln">id AS end_station_id</span><span class="pun">,</span><span class="pln">
+    b</span><span class="pun">.</span><span class="pln">name AS end_station_name</span><span class="pun">,</span><span class="pln">
+    ST_DISTANCE</span><span class="pun">(</span><span class="pln">ST_GeogPoint</span><span class="pun">(</span><span class="pln">a</span><span class="pun">.</span><span class="pln">longitude</span><span class="pun">,</span><span class="pln">
+        a</span><span class="pun">.</span><span class="pln">latitude</span><span class="pun">),</span><span class="pln">
+      ST_GeogPoint</span><span class="pun">(</span><span class="pln">b</span><span class="pun">.</span><span class="pln">longitude</span><span class="pun">,</span><span class="pln">
+        b</span><span class="pun">.</span><span class="pln">latitude</span><span class="pun">))</span><span class="pln"> AS distance
+  FROM
+    </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_stations a
+  CROSS JOIN
+    </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_stations b
+  WHERE
+    a</span><span class="pun">.</span><span class="pln">id </span><span class="pun">!=</span><span class="pln"> b</span><span class="pun">.</span><span class="pln">id </span><span class="pun">),</span><span class="pln">
+  durations AS </span><span class="pun">(</span><span class="pln">
+  SELECT
+    start_station_id</span><span class="pun">,</span><span class="pln">
+    end_station_id</span><span class="pun">,</span><span class="pln">
+    AVG</span><span class="pun">(</span><span class="pln">duration</span><span class="pun">)</span><span class="pln"> AS duration</span><span class="pun">,</span><span class="pln">
+    COUNT</span><span class="pun">(*)</span><span class="pln"> AS num_rides
+  FROM
+    </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">london_bicycles</span><span class="pun">.</span><span class="pln">cycle_hire
+  WHERE
+    duration </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">0</span><span class="pln">
+  GROUP BY
+    start_station_id</span><span class="pun">,</span><span class="pln">
+    end_station_id
+  HAVING
+    num_rides </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">100</span><span class="pln"> </span><span class="pun">)</span><span class="pln">
+SELECT
+  start_station_name</span><span class="pun">,</span><span class="pln">
+  end_station_name</span><span class="pun">,</span><span class="pln">
+  distance</span><span class="pun">,</span><span class="pln">
+  duration</span><span class="pun">,</span><span class="pln">
+  duration</span><span class="pun">/</span><span class="pln">distance AS pace
+FROM
+  distances
+JOIN
+  durations
+USING
+  </span><span class="pun">(</span><span class="pln">start_station_id</span><span class="pun">,</span><span class="pln">
+    end_station_id</span><span class="pun">)</span><span class="pln">
+ORDER BY
+  pace ASC
+LIMIT
+  </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-17"><i class="fa fa-clipboard"></i></button></pre>
+<p>The recast query with the more efficient joins takes only 8.2 seconds, a 1.8x speedup and processes 554 MB, a nearly 4x reduction in cost.</p>
+<p><img alt="13.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/qK4N2hwKcXPlBm3eHpL1ajwKG4uXX1aESK81fAUYr8Y="></p>
+<p>Click Check my progress to verify the objective.</p>
+<ql-activity-tracking step="4">
+      Joins
+  </ql-activity-tracking>
+<h2 id="step6">Avoid overwhelming a worker</h2>
+<p>Some operations (e.g. ordering) have to be carried out on a single worker. Having to sort too much data can overwhelm a worker’s memory and result in a “resources exceeded” error. Avoid overwhelming the worker with too much data. As the hardware in Google data centers is upgraded, what “too much” means in this context expands over time. Currently, this is on the order of one GB.</p>
+<h3>Limiting large sorts</h3>
+<ol>
+<li>
+<p>Let’s say that we wish to go through the rentals and number them 1, 2, 3, etc. in the order that the rental ended. We could do that using the ROW_NUMBER() function</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  rental_id</span><span class="pun">,</span><span class="pln">
+  ROW_NUMBER</span><span class="pun">()</span><span class="pln"> OVER</span><span class="pun">(</span><span class="pln">ORDER BY end_date</span><span class="pun">)</span><span class="pln"> AS rental_number
+FROM
+  </span><span class="str">`bigquery-public-data.london_bicycles.cycle_hire`</span><span class="pln">
+ORDER BY
+  rental_number ASC
+LIMIT
+  </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-18"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="14.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/f5tPpkaLoScA2+J5ljAcGahh1vxRqboVMeR9gdJ+awc="></p>
+<p>It takes 34.5 seconds to process just 372 MB because it needs to sort the entirety of the London bicycles dataset on a single worker. Had we processed a larger dataset, it would have overwhelmed that worker.</p>
+<ol start="2">
+<li>
+<p>We might want to consider whether it is possible to limit the large sorts and distribute them. Indeed, it is possible to extract the date from the rentals and then sort trips within each day:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">WITH
+  rentals_on_day AS </span><span class="pun">(</span><span class="pln">
+  SELECT
+    rental_id</span><span class="pun">,</span><span class="pln">
+    end_date</span><span class="pun">,</span><span class="pln">
+    EXTRACT</span><span class="pun">(</span><span class="pln">DATE
+    FROM
+      end_date</span><span class="pun">)</span><span class="pln"> AS rental_date
+  FROM
+    </span><span class="str">`bigquery-public-data.london_bicycles.cycle_hire`</span><span class="pln"> </span><span class="pun">)</span><span class="pln">
+SELECT
+  rental_id</span><span class="pun">,</span><span class="pln">
+  rental_date</span><span class="pun">,</span><span class="pln">
+  ROW_NUMBER</span><span class="pun">()</span><span class="pln"> OVER</span><span class="pun">(</span><span class="pln">PARTITION BY rental_date ORDER BY end_date</span><span class="pun">)</span><span class="pln"> AS rental_number_on_day
+FROM
+  rentals_on_day
+ORDER BY
+  rental_date ASC</span><span class="pun">,</span><span class="pln">
+  rental_number_on_day ASC
+LIMIT
+  </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-19"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="15.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/fnBMeRGgo2TS3S5WXuUIVuC1nSK4jcIi3Tvm_euCMoA="></p>
+<p>This takes 15.1 seconds (a 2x speedup) because the sorting can be done on just a single day of data at a time.</p>
+<p>Click Check my progress to verify the objective.</p>
+<ql-activity-tracking step="5">
+      Avoid overwhelming a worker
+  </ql-activity-tracking>
+<h3>Data skew</h3>
+<p>The same problem of overwhelming a worker (in this case, overwhelm the memory of the worker) can happen during an ARRAY_AGG with GROUP BY if one of the keys is much more common than the others.</p>
+<ol>
+<li>
+<p>Because there are more than 3 million GitHub repositories and the commits are well distributed among them, this query succeeds (make sure you execute the query in the <code>US</code> processing center):</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  repo_name</span><span class="pun">,</span><span class="pln">
+  ARRAY_AGG</span><span class="pun">(</span><span class="pln">STRUCT</span><span class="pun">(</span><span class="pln">author</span><span class="pun">,</span><span class="pln">
+      committer</span><span class="pun">,</span><span class="pln">
+      subject</span><span class="pun">,</span><span class="pln">
+      message</span><span class="pun">,</span><span class="pln">
+      trailer</span><span class="pun">,</span><span class="pln">
+      difference</span><span class="pun">,</span><span class="pln">
+      encoding</span><span class="pun">)</span><span class="pln">
+  ORDER BY
+    author</span><span class="pun">.</span><span class="pln">date</span><span class="pun">.</span><span class="pln">seconds</span><span class="pun">)</span><span class="pln">
+FROM
+  </span><span class="str">`bigquery-public-data.github_repos.commits`</span><span class="pun">,</span><span class="pln">
+  UNNEST</span><span class="pun">(</span><span class="pln">repo_name</span><span class="pun">)</span><span class="pln"> AS repo_name
+GROUP BY
+  repo_name</span></code><button class="button button--copy js-copy-button-20"><i class="fa fa-clipboard"></i></button></pre>
+<p>Note, while this query will succeed, it can take upwards of 15 minutes to do so. If you understand the query, move on in the lab.</p>
+<ol start="2">
+<li>
+<p>Most of the people using GitHub live in only a few time zones, so grouping by the timezone fails -- we are asking a single worker to sort a significant fraction of 750GB:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  author</span><span class="pun">.</span><span class="pln">tz_offset</span><span class="pun">,</span><span class="pln">
+  ARRAY_AGG</span><span class="pun">(</span><span class="pln">STRUCT</span><span class="pun">(</span><span class="pln">author</span><span class="pun">,</span><span class="pln">
+      committer</span><span class="pun">,</span><span class="pln">
+      subject</span><span class="pun">,</span><span class="pln">
+      message</span><span class="pun">,</span><span class="pln">
+      trailer</span><span class="pun">,</span><span class="pln">
+      difference</span><span class="pun">,</span><span class="pln">
+      encoding</span><span class="pun">)</span><span class="pln">
+  ORDER BY
+    author</span><span class="pun">.</span><span class="pln">date</span><span class="pun">.</span><span class="pln">seconds</span><span class="pun">)</span><span class="pln">
+FROM
+  </span><span class="str">`bigquery-public-data.github_repos.commits`</span><span class="pln">
+GROUP BY
+  author</span><span class="pun">.</span><span class="pln">tz_offset</span></code><button class="button button--copy js-copy-button-21"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="16.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/+uy4zx2IGgDHpevLr_fvu9U9o8p0kgHUMCLMTgHimz0="></p>
+<ol start="3">
+<li>
+<p>If you do require sorting all the data, use more granular keys (i.e. distribute the group’s data over more workers) and then aggregate the results corresponding to the desired key. For example, instead of grouping only by the time zone, it is possible to group by both <code>timezone</code> and <code>repo_name</code> and then aggregate across repos to get the actual answer for each timezone:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  repo_name</span><span class="pun">,</span><span class="pln">
+  author</span><span class="pun">.</span><span class="pln">tz_offset</span><span class="pun">,</span><span class="pln">
+  ARRAY_AGG</span><span class="pun">(</span><span class="pln">STRUCT</span><span class="pun">(</span><span class="pln">author</span><span class="pun">,</span><span class="pln">
+      committer</span><span class="pun">,</span><span class="pln">
+      subject</span><span class="pun">,</span><span class="pln">
+      message</span><span class="pun">,</span><span class="pln">
+      trailer</span><span class="pun">,</span><span class="pln">
+      difference</span><span class="pun">,</span><span class="pln">
+      encoding</span><span class="pun">)</span><span class="pln">
+  ORDER BY
+    author</span><span class="pun">.</span><span class="pln">date</span><span class="pun">.</span><span class="pln">seconds</span><span class="pun">)</span><span class="pln">
+FROM
+  </span><span class="str">`bigquery-public-data.github_repos.commits`</span><span class="pun">,</span><span class="pln">
+  UNNEST</span><span class="pun">(</span><span class="pln">repo_name</span><span class="pun">)</span><span class="pln"> AS repo_name
+GROUP BY
+  repo_name</span><span class="pun">,</span><span class="pln">
+  author</span><span class="pun">.</span><span class="pln">tz_offset</span></code><button class="button button--copy js-copy-button-22"><i class="fa fa-clipboard"></i></button></pre>
+<p>Note, while this query will succeed, it can take upwards of 15 minutes to do so. If you understand the query, move on in the lab.</p>
+<h2 id="step7">Approximate aggregation functions</h2>
+<p>BigQuery provides fast, low-memory approximations of aggregate functions. Instead of using COUNT(DISTINCT …), we can use APPROX_COUNT_DISTINCT on large data streams when a small statistical uncertainty in the result is tolerable.</p>
+<h3>Approximate count</h3>
+<ol>
+<li>
+<p>We can find the number of unique GitHub repositories using:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT
+  COUNT</span><span class="pun">(</span><span class="pln">DISTINCT repo_name</span><span class="pun">)</span><span class="pln"> AS num_repos
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">github_repos</span><span class="pun">.</span><span class="pln">commits</span><span class="pun">,</span><span class="pln">
+  UNNEST</span><span class="pun">(</span><span class="pln">repo_name</span><span class="pun">)</span><span class="pln"> AS repo_name</span></code><button class="button button--copy js-copy-button-23"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="17.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/_rgwp+aWVTnkvEvCjIkYuB9VPikHEKG2YDFAu9Llg6c="></p>
+<p>The above query takes 8.3 seconds to compute the correct result of 3347770.</p>
+<ol start="2">
+<li>
+<p>Using the approximate function:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT
+  APPROX_COUNT_DISTINCT</span><span class="pun">(</span><span class="pln">repo_name</span><span class="pun">)</span><span class="pln"> AS num_repos
+FROM
+  </span><span class="str">`bigquery-public-data`</span><span class="pun">.</span><span class="pln">github_repos</span><span class="pun">.</span><span class="pln">commits</span><span class="pun">,</span><span class="pln">
+  UNNEST</span><span class="pun">(</span><span class="pln">repo_name</span><span class="pun">)</span><span class="pln"> AS repo_name</span></code><button class="button button--copy js-copy-button-24"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="18.png" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/QHWGlNpHMSMB8es93LzTBORc09LtKxXwasUrGa8Fn4A="></p>
+<p>takes 3.9 seconds (a 2x speedup) and returns an approximate result of 3399473, which overestimates the correct answer by 1.5%.</p>
+<p>The approximate algorithm is much more efficient than the exact algorithm only on large datasets and is recommended in use-cases where errors of approximately 1% are tolerable. Before using the approximate function, measure on your use case!</p>
+<p>Other available approximate functions include APPROX_QUANTILES to compute percentiles, APPROX_TOP_COUNT to find the top elements and APPROX_TOP_SUM to compute top elements based on the sum of an element.</p>
+<p>Click Check my progress to verify the objective.</p>
+<ql-activity-tracking step="6">
+      Approximate aggregation functions
+  </ql-activity-tracking>
+<h2 id="step8">Congratulations!</h2>
+<p>You've learned about a number of techniques to potentially improve your query performance. While considering some of these techniques, remember the legendary computer scientist Donald Knuth's quote, "Premature optimization is the root of all evil."</p>
+<h3>Next steps / Learn More</h3>
+<ul>
+<li>
+<p>Google Cloud Platform <a href="https://cloud.google.com/bigquery/docs/best-practices-performance-overview">documentation for optimizing query performance</a>.</p>
+</li>
+<li>
+<p>BigQuery <a href="https://cloud.google.com/bigquery/docs/best-practices-costs">best practices for controlling costs</a>.</p>
+</li>
+</ul>
+<h5>Manual Last Updated September 24, 2019</h5>
+<h5>Lab Last Tested September 24, 2019</h5>
+<p>©2019 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+<div class="js-lab-content-outline lab-content__outline">
+<a href="https://googlecoursera.qwiklabs.com/focuses/46800#step1" class="">Overview</a><a href="https://googlecoursera.qwiklabs.com/focuses/46800#step2" class="">Setup and requirements</a><a href="https://googlecoursera.qwiklabs.com/focuses/46800#step3" class="">Minimize I/O</a><a href="https://googlecoursera.qwiklabs.com/focuses/46800#step4">Cache results of previous queries</a><a href="https://googlecoursera.qwiklabs.com/focuses/46800#step5">Efficient joins</a><a href="https://googlecoursera.qwiklabs.com/focuses/46800#step6">Avoid overwhelming a worker</a><a href="https://googlecoursera.qwiklabs.com/focuses/46800#step7">Approximate aggregation functions</a><a href="https://googlecoursera.qwiklabs.com/focuses/46800#step8">Congratulations!</a>
+</div>
+</div>
+
+</div>
+
+
+</div>
+</div>
+<div class="lab-assessment__tab js-lab-assessment-tab">
+<h5 class="small-label">
+Score
+</h5>
+<h3 class="js-lab-assessment-total-score">
+—/50
+</h3>
+<iframe class="l-ie-iframe-fix" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/saved_resource(2).html"></iframe>
+</div>
+<div class="lab-assessment__panel js-lab-assessment-panel">
+<!-- / If lab_instance has is started and assessment is generated, use -->
+<!-- / lab_instance.assessment, otherwise use lab.assessment_manual -->
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+Minimize I/O
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="1">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-1">
+</span>
+/ 10
+</p>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+Cache results of previous queries
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="2">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-2">
+</span>
+/ 10
+</p>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+Denormalization
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="3">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-3">
+</span>
+/ 5
+</p>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+Joins
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="4">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-4">
+</span>
+/ 5
+</p>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+Avoid overwhelming a worker
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="5">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-5">
+</span>
+/ 10
+</p>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+Approximate aggregation functions
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="6">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-6">
+</span>
+/ 10
+</p>
+</div>
+
+<iframe class="l-ie-iframe-fix" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/saved_resource(3).html"></iframe>
+</div>
+<div class="lab-introduction js-lab-introduction is-hidden">
+<div class="lab-introduction__inner">
+<h1 class="headline-1">Welcome to Your First Lab!</h1>
+<ql-icon-button class="js-skip-button">close</ql-icon-button>
+<div class="lab-introduction__video">
+<iframe allow="autoplay; encrypted-media" allowfullscreen="" frameborder="0" id="lab-introduction" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/yF7EDXKTmoQ.html"></iframe>
+</div>
+<a class="js-skip-button button button--outline">Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+<div class="modal fade" id="lab-details-modal">
+<div class="modal-container">
+<div class="mdl-shadow--24dp modal-content">
+<div class="modal-body">
+<p class="l-mbm">
+In this lab, we will look at a number of techniques for reducing query execution times and cost in BigQuery.
+</p>
+<p class="small-label l-mbs">
+<strong>
+Duration:
+</strong>
+0m setup
+·
+60m access
+·
+60m completion
+</p>
+<p class="small-label l-mbs">
+<span><strong>Levels: </strong>advanced</span>
+</p>
+<p class="small-label">
+<strong>
+Permalink:
+</strong>
+<a href="https://googlecoursera.qwiklabs.com/catalog_lab/2124">https://googlecoursera.qwiklabs.com/catalog_lab/2124</a>
+</p>
+</div>
+<div class="modal-actions">
+<a class="mdl-button mdl-button--primary mdl-js-button mdl-js-ripple-effect" data-dismiss="modal" data-upgraded=",MaterialButton,MaterialRipple">
+Got It
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+</div>
+
+
+</div>
+</div>
+<iframe class="l-ie-iframe-fix" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/saved_resource(4).html"></iframe>
+</div>
+<div class="modal fade" id="lab-review-modal">
+<div class="modal-container">
+<div class="mdl-shadow--24dp modal-content">
+<form class="simple_form js-lab-review-form" id="edit_lab_review_4390119" action="https://googlecoursera.qwiklabs.com/lab_reviews/4390119" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="patch"><div class="modal-body">
+<p class="label">
+How satisfied are you with this lab?*
+</p>
+<div class="rateit js-rateit" data-rateit-max="5" data-rateit-min="0" data-rateit-resetable="false" data-rateit-step="1" data-rateit-value="5"><div class="rateit-reset" style="display: none;"></div><div class="rateit-range" style="width: 80px; height: 16px;"><div class="rateit-selected" style="height: 16px; width: 80px;"></div><div class="rateit-hover" style="height:16px"></div></div></div>
+<div class="l-mtm">
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="2215437" name="lab_review[user_id]" id="lab_review_user_id"></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" value="5981" name="lab_review[classroom_id]" id="lab_review_classroom_id"></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="2124" name="lab_review[lab_id]" id="lab_review_lab_id"></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" value="46800" name="lab_review[focus_id]" id="lab_review_focus_id"></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="2" name="lab_review[rating]" id="lab_review_rating"></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment"></textarea></div></div>
+</div>
+</div>
+<div class="modal-actions">
+<a class="mdl-button mdl-button--primary mdl-js-button mdl-js-ripple-effect" data-dismiss="modal" data-upgraded=",MaterialButton,MaterialRipple">
+Cancel
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" class="btn mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary" id="submit" data-disabled="false" data-disable-with="Submit" data-upgraded=",MaterialButton,MaterialRipple"><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></input>
+</div>
+</form>
+
+</div>
+</div>
+<iframe class="l-ie-iframe-fix" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/saved_resource(5).html"></iframe>
+</div>
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    initLabContent( );
+  ql.labOutline.links.init();
+  ql.labOutline.layout.init();
+  initLabReviewModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+<style>
+  .mdl-layout__container {
+    position: static
+  }
+</style>
+
+
+<object id="__symantecPKIClientMessenger" data-supports-flavor-configuration="true" data-extension-version="0.5.0.109" style="display: none;"></object><span id="__symantecPKIClientDetector" style="display: none;">__PRESENT</span><iframe data-product="web_widget" title="No content" tabindex="-1" aria-hidden="true" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/saved_resource(6).html" style="width: 0px; height: 0px; border: 0px; position: absolute; top: -9999px;"></iframe><div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s ease 0s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><iframe src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/anchor.html" width="256" height="60" role="presentation" name="a-cwfokscco0ai" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/saved_resource(7).html"></iframe></div><div><iframe title="Opens a widget where you can chat to one of our agents" id="launcher" tabindex="0" class="zEWidget-launcher zEWidget-launcher--active" style="border: none; background: transparent; z-index: 999998; transform: translateZ(0px); position: fixed; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; opacity: 1; height: 50px; max-height: 551px; min-height: 50px; margin: 10px 20px; right: 0px; bottom: 0px; width: 112px;width: 112px;" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/saved_resource(8).html"></iframe></div><div><iframe title="Find more information here" id="webWidget" tabindex="-1" class="zEWidget-webWidget " style="border: none; background: transparent; z-index: 999999; transform: translateZ(0px); position: fixed; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; opacity: 0; width: 357px; height: 100%; max-height: 565px; min-height: 150px; margin-left: 8px; margin-right: 8px; top: -9999px; visibility: hidden;" src="./Optimizing your BigQuery Queries for Performance _ Qwiklabs_files/saved_resource(9).html"></iframe></div></body></html>

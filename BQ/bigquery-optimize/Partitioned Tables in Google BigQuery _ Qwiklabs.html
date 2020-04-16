@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)https://googlecoursera.qwiklabs.com/focuses/46801 -->
+<html lang="en" class="mdl-js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+<meta content="[]" name="active-experiments">
+<meta content="{&quot;userId&quot;:2215437}" name="help-api-product-data">
+<meta name="csrf-param" content="authenticity_token">
+<meta name="csrf-token" content="VlkdbClSnP8Ou5Nnuk2CPG7UUjQkPbsYK+JfXNpwkGC2DgHgCTSvpBU7QLY70AWmso6Ibx4qZJ5Wiw+UAgaWwQ==">
+<title>Partitioned Tables in Google BigQuery | Qwiklabs</title>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0" name="viewport">
+<meta content="This lab focuses on how to query partitioned datasets and how to create your own dataset partitions to improve query performance, which reduces cost." name="description">
+<meta content="Qwiklabs" name="author">
+<meta content="1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0" name="google-site-verification">
+<meta content="Partitioned Tables in Google BigQuery | Qwiklabs" property="og:title">
+<meta content="website" property="og:type">
+<meta content="/favicon-144.png" property="og:image">
+<meta content="Qwiklabs" property="og:site_name">
+<meta content="This lab focuses on how to query partitioned datasets and how to create your own dataset partitions to improve query performance, which reduces cost." property="og:description">
+<meta content="/qwiklabs_logo_900x887.png" property="og:logo" size="900x887">
+<meta content="/qwiklabs_logo_994x187.png" property="og:logo" size="994x187">
+<meta content="#3681E4" property="msapplication-TileColor">
+<meta content="/favicon-144.png" property="msapplication-TileImage">
+<link href="https://googlecoursera.qwiklabs.com/favicon-32.png" rel="shortcut icon">
+<link color="#3681E4" href="https://googlecoursera.qwiklabs.com/favicon-svg.svg" rel="mask-icon">
+<link href="https://googlecoursera.qwiklabs.com/favicon-180.png" rel="apple-touch-icon-precomposed">
+<link rel="stylesheet" media="screen" href="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/css">
+
+
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type="text/javascript" async="" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/js"></script><script type="text/javascript" async="" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/analytics.js.download"></script><script type="text/javascript" async="" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/analytics.min.js.download"></script><script type="text/javascript" id="www-widgetapi-script" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/www-widgetapi.js.download" async=""></script><script type="text/javascript" async="" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/recaptcha__en.js.download"></script><script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"kapil","lastname":"h kumar","fullname":"kapil h kumar","company":"Coursera","email":"kapil.h.kumar@accenture.com","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"16b3bf895f73ebd7d9e1e7f216f671c6","qlCreatedAt":"2019-11-07 17:13:56 UTC","optIn":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="googlecoursera-run";
+//]]>
+</script>
+<script src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/api.js.download"></script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script id="ze-snippet" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/snippet.js.download"></script>
+
+
+
+<link rel="stylesheet" media="all" href="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/application-3da541dd71f92e39564c03465c99f32628556dec01f4d39b904adbced14a24aa.css">
+<script>
+  EVENT_SOURCE_BASE_URL = "https://googlecoursera-run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/webcomponents-loader.js.download"></script><script src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/webcomponents-hi.js.download"></script>
+<script src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/hallofmirrors-c8a543a8e9e63ffd57a2b2bb36bd5c342eaa604dffa0f1c63a43d84ccebe2d76.js.download"></script><script async="" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/lazy.min.js.download"></script>
+<script src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/iframe_api"></script>
+<script src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js.download"></script>
+<script src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/application-c23343461fee67994bfc26ae6509cf3e86bcddd7d48088f4de19fb8c0ed6eb13.js.download"></script>
+</head>
+<body class="focuses focuses-show lab-show l-full no-nav">
+<div class="header-container">
+<div class="header">
+<a class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect header__button header__button--nav header__nav-panel-button js-nav-toggle" data-upgraded=",MaterialButton,MaterialRipple">
+<i class="material-icons">menu</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<div class="header__title">
+<a class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect header__button header__button--nav" href="https://www.coursera.org/" data-upgraded=",MaterialButton,MaterialRipple"><ql-icon>arrow_back</ql-icon><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+
+<h1 class="headline-5">
+Partitioned Tables in Google BigQuery
+</h1>
+</div>
+<div class="header__actions">
+<a class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect header__button header__button--action header__button--search js-header-search-bar-button" data-upgraded=",MaterialButton,MaterialRipple">
+<i class="material-icons">search</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<a class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" id="toggle-lab-control-panel" href="javascript:;" data-upgraded=",MaterialButton,MaterialRipple" tabindex="0"><i class="material-icons">description</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a><div class="mdl-tooltip js-tooltip" data-mdl-for="toggle-lab-control-panel" data-upgraded=",MaterialTooltip">
+Toggle Lab Panel
+</div>
+
+<ql-help context="lab" productdata="{&quot;userId&quot;:2215437}" data-analytics-action="opened_help" data-analytics-label="lab"></ql-help>
+<a class="header-my-account-button mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect js-my-account-button" data-upgraded=",MaterialButton,MaterialRipple">
+<img class="avatar " alt="avatar image" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/a90f55fd00b2b38b68c8d98327feb703.png">
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<div class="header-my-account-menu js-my-account-menu">
+<div class="card elevation-2 no-padding">
+<div class="my-account-menu__top">
+<img class="avatar " alt="avatar image" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/a90f55fd00b2b38b68c8d98327feb703.png">
+<div class="my-account-menu__info">
+<h4 class="subtitle-headline-1">
+kapil h kumar
+</h4>
+<p class="body-2 text--gray">
+<span>kapil.h.kumar@accenture.com</span>
+</p>
+<a class="button" href="https://googlecoursera.qwiklabs.com/my_account/profile">My Account</a>
+</div>
+</div>
+<div class="my-account-menu__bottom">
+<a class="text--green subtitle-headline-2" href="https://googlecoursera.qwiklabs.com/my_account/credits">0 Credits
+</a><a data-analytics-action="clicked_sign_out" class="button button--hairline" rel="nofollow" data-method="delete" href="https://googlecoursera.qwiklabs.com/users/sign_out">Sign Out</a>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+<div class="header__search-bar js-header-search-bar">
+<form id="catalog-search-mobile" onsubmit="ql.catalogSearchFilter(); return false;" action="https://googlecoursera.qwiklabs.com/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="VlkdbClSnP8Ou5Nnuk2CPG7UUjQkPbsYK+JfXNpwkGC2DgHgCTSvpBU7QLY70AWmso6Ibx4qZJ5Wiw+UAgaWwQ==">
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar">
+</form>
+
+<a class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect header__button" data-upgraded=",MaterialButton,MaterialRipple">
+<i class="material-icons">close</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+</div>
+</div>
+
+<nav class="nav-bar">
+<a class="nav-bar__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/"><ql-icon class="nav-bar__item__icon">
+home
+</ql-icon>
+<span class="nav-bar__item__label">
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/catalog"><ql-icon class="nav-bar__item__icon">
+school
+</ql-icon>
+<span class="nav-bar__item__label">
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_learning"><ql-icon class="nav-bar__item__icon">
+event_note
+</ql-icon>
+<span class="nav-bar__item__label">
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class="nav-panel js-nav-panel">
+<div class="nav-panel__logo">
+<div class="logo logo--blue"></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/"><ql-icon class="nav-panel__item__icon">
+home
+</ql-icon>
+<div class="nav-panel__item__label">
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/catalog"><ql-icon class="nav-panel__item__icon">
+school
+</ql-icon>
+<div class="nav-panel__item__label">
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_learning"><ql-icon class="nav-panel__item__icon">
+event_note
+</ql-icon>
+<div class="nav-panel__item__label">
+My Learning
+</div>
+</a>
+<div class="nav-panel__spacer"></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_account/profile"><ql-icon class="nav-panel__item__icon">
+account_circle
+</ql-icon>
+<div class="nav-panel__item__label">
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_account/credits"><ql-icon class="nav-panel__item__icon">
+money
+</ql-icon>
+<div class="nav-panel__item__label">
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_account/security"><ql-icon class="nav-panel__item__icon">
+security
+</ql-icon>
+<div class="nav-panel__item__label">
+Security
+</div>
+</a>
+<div class="nav-panel__spacer"></div>
+<a class="nav-panel__item" tabindex="-1" href="https://googlecoursera.qwiklabs.com/focuses/46801#"><ql-help>
+<div class="nav-panel__help-item">
+<ql-icon class="nav-panel__item__icon">help</ql-icon>
+<div class="nav-panel__item__label">Help</div>
+</div>
+</ql-help>
+</a><div class="nav-panel__small-links">
+<a tabindex="-1" href="https://googlecoursera.qwiklabs.com/privacy_policy">Privacy</a>
+<a tabindex="-1" href="https://googlecoursera.qwiklabs.com/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class="nav-panel__overlay js-nav-toggle"></div>
+
+<main class="js-main">
+<span class="hidden" id="flash-sibling-before"></span>
+
+<div class="l-main-wrapper" id="main-wrapper">
+
+
+
+
+
+
+
+<div class="js-lab-state" data-analytics-payload="{&quot;label&quot;:&quot;Partitioned Tables in Google BigQuery&quot;,&quot;lab_name&quot;:&quot;Partitioned Tables in Google BigQuery&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;googlecoursera-run&quot;}" data-focus-id="46801" data-lab-billing-limit="0.0" data-lab-duration="5400" data-parent="classroom"></div>
+<ql-lab-control-panel class="js-lab-control-panel l-lab-control-panel" connectiondetails="[]" connectionfiles="[]" labcontrolbutton="{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}" labtimer="{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:5400}" studentresources="[]"></ql-lab-control-panel>
+<div class="l-lab-main-body">
+<div class="js-lab-content lab-content">
+<div class="alert alert--fake js-alert">
+<p class="alert__message js-alert-message"></p>
+<a class="alert__close js-alert-close">
+<i class="fa fa-times"></i>
+</a>
+<iframe class="l-ie-iframe-fix" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/saved_resource(1).html"></iframe>
+</div>
+<div class="lab-content__markdown-wrapper">
+<div class="lab-preamble">
+<h1 class="lab-preamble__title">
+Partitioned Tables in Google BigQuery
+</h1>
+<div class="lab-preamble__details subtitle-headline-1">
+<span>1 hour 30 minutes</span>
+<span>1 Credit</span>
+<div class="lab__rating">
+<a href="https://googlecoursera.qwiklabs.com/focuses/46801/reviews?parent=catalog"><div class="rateit" data-rateit-readonly="true" data-rateit-value="4.4127"><div class="rateit-reset" style="display: none;"></div><div class="rateit-range" style="width: 80px; height: 16px;"><div class="rateit-selected" style="height: 16px; width: 70.6032px;"></div><div class="rateit-hover" style="height:16px"></div></div></div>
+
+</a><a data-target="#lab-review-modal" data-toggle="modal">
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class="lab-content__inner-wrapper">
+<div class="js-markdown-instructions lab-content__markdown markdown-lab-instructions" id="markdown-lab-instructions">
+
+
+
+<h2 id="step1">Overview</h2>
+<p><a href="http://bigquery.cloud.google.com/">BigQuery</a> is Google's fully managed, NoOps, low cost analytics database. With BigQuery you can query terabytes and terabytes of data without having any infrastructure to manage or needing a database administrator. BigQuery uses SQL and can take advantage of the pay-as-you-go model. BigQuery allows you to focus on analyzing data to find meaningful insights.</p>
+<p>The dataset you'll use is an  <a href="https://www.en.advertisercommunity.com/t5/Articles/Introducing-the-Google-Analytics-Sample-Dataset-for-BigQuery/ba-p/1676331#">ecommerce dataset</a> that has millions of Google Analytics records for the  <a href="https://shop.googlemerchandisestore.com/">Google Merchandise Store</a> loaded into BigQuery. You have a copy of that dataset for this lab and will explore the available fields and row for insights.</p>
+<p>In this lab you will query partitioned datasets and create your own dataset partitions to improve query performance and reduce cost.</p>
+<h2 id="step2">Setup</h2>
+<h4>Before you click the Start Lab button</h4>
+<p>Read these instructions. Labs are timed and you cannot pause them. The timer, which starts when you click Start Lab, shows how long Cloud resources will be made available to you.</p>
+<p>This Qwiklabs hands-on lab lets you do the lab activities yourself in a real cloud environment, not in a simulation or demo environment. It does so by giving you new, temporary credentials that you use to sign in and access the Google Cloud Platform for the duration of the lab.</p>
+<h4>What you need</h4>
+<p>To complete this lab, you need:</p>
+<ul>
+<li>Access to a standard internet browser (Chrome browser recommended).</li>
+<li>Time to complete the lab.</li>
+</ul>
+<p><strong><em>Note:</em></strong> If you already have your own personal GCP account or project, do not use it for this lab.</p>
+
+<h3>Set up Google Cloud Platform Console</h3>
+<h4>How to start your lab and sign in to the Console</h4>
+<ol>
+<li>
+<p>Click the <strong>Start Lab</strong> button. If you need to pay for the lab, a pop-up opens for you to select your payment method.
+On the left is a panel populated with the temporary credentials that you must use for this lab.</p>
+<p><img alt="Open Google Console" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/_tHp4GI5VSDyTtdqi3qDFtevuY014F88+Fow_adnRgE="></p>
+</li>
+<li>
+<p>Copy the username, and then click <strong>Open Google Console</strong>.
+The lab spins up resources, and then opens another tab that shows the <strong>Choose an account</strong> page.</p>
+<p><strong><em>Tip:</em></strong> Open the tabs in separate windows, side-by-side.</p>
+</li>
+<li>
+<p>On the Choose an account page, click <strong>Use Another Account</strong>.</p>
+<p><img alt="Choose an account" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/eQ6xPnPn13GjiJP3RWlHWwiMjhooHxTNvzfg1AL2WPw="></p>
+</li>
+<li>
+<p>The Sign in page opens. Paste the username that you copied from the Connection Details panel. Then copy and paste the password.</p>
+<p><strong><em>Important:</em></strong> You must use the credentials from the Connection Details panel. Do not use your Qwiklabs credentials. If you have your own GCP account, do not use it for this lab (avoids incurring charges).</p>
+</li>
+<li>
+<p>Click through the subsequent pages:</p>
+<ul>
+<li>Accept the terms and conditions.</li>
+<li>Do not add recovery options or two-factor authentication (because this is a temporary account).</li>
+<li>Do not sign up for free trials.</li>
+</ul>
+</li>
+</ol>
+<p>After a few moments, the GCP console opens in this tab.</p>
+<aside>
+<b>Note:</b> You can view the menu with a list of GCP Products and Services by clicking the <b>Navigation menu</b> at the top-left, next to “Google Cloud Platform”.
+<img alt="Cloud Console Menu" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/9vT7xPlxoNP_PsK0J8j0ZPFB4HnnpaIJVCDByaBrSHg=">
+</aside>
+
+<h3>Open BigQuery Console</h3>
+<p>In the Google Cloud Console, select <strong>Navigation menu</strong> &gt; <strong>BigQuery</strong>:</p>
+<p><img alt="BigQuery_menu.png" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/QwUX6algdXPgIThqBlgB2rnqGkoQUUANkl3xicD06uc="></p>
+<p>The <strong>Welcome to BigQuery in the Cloud Console</strong> message box opens. This message box provides a link to the quickstart guide and lists UI updates.</p>
+<p>Click <strong>Done</strong>.</p>
+
+<h2 id="step3">Create a new dataset</h2>
+<p>First, you will create a dataset to store your tables.</p>
+<p>Click on your project name, then click <strong>Create Dataset</strong>.</p>
+<p><img alt="5fce8105cf381420.png" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/VLtojAawcq9BhGzT7Bu_QstCbmn1j3hglRUI0XZfZjM="></p>
+<p>Set the <em>Dataset ID</em> to <code>ecommerce</code>. Leave the other options at their default values (Data Location, Default table Expiration). Click <strong>Create dataset</strong>.</p>
+<h2 id="step4">Creating tables with date partitions</h2>
+<p>A partitioned table is a table that is divided into segments, called partitions, that make it easier to manage and query your data. By dividing a large table into smaller partitions, you can improve query performance, and control costs by reducing the number of bytes read by a query.</p>
+<p>Now you will create a new table and bind a date or timestamp column as a partition. Before we do that, let's explore the data in the non-partitioned table first.</p>
+<h3>Query webpage analytics for a sample of visitors in 2017</h3>
+<p>In the <strong>Query Editor</strong>, add the below query. Before running, note the total amount of data it will process as indicated next to the query validator icon: "This query will process 1.74 GB when run".</p>
+<pre><code>#standardSQL
+SELECT DISTINCT
+  fullVisitorId,
+  date,
+  city,
+  pageTitle
+FROM `data-to-insights.ecommerce.all_sessions_raw`
+WHERE date = '20170708'
+LIMIT 5
+</code><button class="button button--copy js-copy-button-0"><i class="fa fa-clipboard"></i></button></pre>
+<p>Click <strong>Run</strong>.</p>
+<p>The query returns 5 results.</p>
+<h3>Query webpage analytics for a sample of visitors in 2018</h3>
+<p>Let's modify the query to look at visitors for 2018 now.</p>
+<p>In the <strong>Query Editor</strong>, add the below query:</p>
+<pre><code>#standardSQL
+SELECT DISTINCT
+  fullVisitorId,
+  date,
+  city,
+  pageTitle
+FROM `data-to-insights.ecommerce.all_sessions_raw`
+WHERE date = '20180708'
+LIMIT 5
+</code><button class="button button--copy js-copy-button-1"><i class="fa fa-clipboard"></i></button></pre>
+<p>The <strong>Query Validator</strong> will tell you how much data this query will process.</p>
+<p>Click <strong>Run</strong>.</p>
+<p>Notice that the query still processes 1.74 GB even though it returns 0 results. Why? The query engine needs to scan all records in the dataset to see if they satisfy the date matching condition in the WHERE clause. It must look at each record to compare the date against the condition of ‘20180708'.</p>
+<p>Additionally, the LIMIT 5 does not reduce the total amount of data processed, which is a common misconception.</p>
+<p><ql-multiple-choice-probe answerindex="0" optiontitles="[
+&quot;Before the query runs, the query engine does not know whether 2018 data exists to satisfy the WHERE clause condition and it needs to scan through all records in a non-partitioned table.&quot;,
+&quot;The query was written incorrectly&quot;,
+&quot;The query engine has the metadata for each partition stored but still needs to scan all records even if the table is partitioned.&quot;
+]" shuffle="false" stem="Why did the previous query return 0 records but still scan through 1.74GB of data?">
+</ql-multiple-choice-probe></p>
+<h4>Common use-cases for date-partitioned tables</h4>
+<p>Scanning through the entire dataset everytime to compare rows against a WHERE condition is wasteful. This is especially true if you only really care about records for a specific period of time like:</p>
+<ul>
+<li>All transactions for the last year</li>
+<li>All visitor interactions within the last 7 days</li>
+<li>All products sold in the last month</li>
+</ul>
+<p>Instead of scanning the entire dataset and filtering on a date field like we did in the earlier queries, we will now setup a date-partitioned table. This will allow us to completely ignore scanning records in certain partitions if they are irrelevant to our query.</p>
+<h4>Create a new partitioned table based on date</h4>
+<p>Click <strong>Create New Query</strong> and add the below query, then <strong>Run</strong>:</p>
+<pre><code>#standardSQL
+ CREATE OR REPLACE TABLE ecommerce.partition_by_day
+ PARTITION BY date_formatted
+ OPTIONS(
+   description="a table partitioned by date"
+ ) AS
+ SELECT DISTINCT
+ PARSE_DATE("%Y%m%d", date) AS date_formatted,
+ fullvisitorId
+ FROM `data-to-insights.ecommerce.all_sessions_raw`
+</code><button class="button button--copy js-copy-button-2"><i class="fa fa-clipboard"></i></button></pre>
+<p>In this query, note the new option - PARTITION BY a field. The two options available to partition are DATE and TIMESTAMP. The  PARSE_DATE function is used on the date field (stored as a string) to get it into the proper DATE type for partitioning.</p>
+<p>Click on the <strong>ecommerce</strong> dataset, then select the new <strong>partiton_by_day</strong> table:</p>
+<p><img alt="f15327a7d4da4db9.png" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/MOKf1mKRDJjhlD0WxypQMvRsMV93A4PPOjC4aD+cpgM="></p>
+<p>Click on the <strong>Details</strong> tab.</p>
+<p>Confirm that you see:</p>
+<ul>
+<li>Partitioned by: Day</li>
+<li>Partitioning on: date_formatted</li>
+</ul>
+<p><img alt="760036217a68d1e.png" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/W1fjs0xFtV32I4UkLqdPpNsaWCKlD_WpaS316pzFkdE="></p>
+<aside>
+Note: Partitions within partitioned tables on your Qwiklabs account will auto-expire after 60 days from the value in your date column. Your personal GCP account with billing-enabled will let you have partitioned tables that don't expire.
+
+For the purposes of this lab, the remaining queries will be ran against partitioned tables that have already been created.
+
+</aside>
+<h2 id="step5">View data processed with a partitioned table</h2>
+<p>Run the below query, and note the total bytes to be processed:</p>
+<pre><code>#standardSQL
+SELECT *
+FROM `data-to-insights.ecommerce.partition_by_day`
+WHERE date_formatted = '2016-08-01'
+</code><button class="button button--copy js-copy-button-3"><i class="fa fa-clipboard"></i></button></pre>
+<p>This time ~25 KB or 0.025MB is processed, which is a fraction of what you queried.</p>
+<p>Now run the below query, and note the total bytes to be processed:</p>
+<pre><code>#standardSQL
+SELECT *
+FROM `data-to-insights.ecommerce.partition_by_day`
+WHERE date_formatted = '2018-07-08'
+</code><button class="button button--copy js-copy-button-4"><i class="fa fa-clipboard"></i></button></pre>
+<p>You should see <code>This query will process 0 B when run.</code></p>
+<p>Why is there 0 bytes processed?</p>
+<p><ql-multiple-choice-probe answerindex="0" optiontitles="[
+&quot;The query engine knows which partitions already exist and knows that no partition exists for 2018-07-08 (the ecommerce dataset ranges from 2016-08-01 to 2017-08-01).&quot;,
+&quot; The query engine has cached the results from a query we ran earlier and will return the same 10 records&quot;,
+&quot;The query engine processes many fewer rows of data when you use partitions and caches each row for all users so 0 bytes are processed&quot;
+]" shuffle="false" stem="Why is there 0 bytes processed?">
+</ql-multiple-choice-probe></p>
+<h2 id="step6">Creating an auto-expiring partitioned table</h2>
+<p>Auto-expiring partitioned tables are used to comply with data privacy statutes, and can be used to avoid unnecessary storage (which you'll be charged for in a production environment). If you want to create a rolling window of data, add an expiration date so the partition disappears after you're finished using it.</p>
+<h3>Explore the available NOAA weather data tables</h3>
+<p>In the left menu, in <strong>Resources</strong>, click on <strong>Add Data</strong> and select <strong>Explore public datasets</strong>.</p>
+<p><img alt="fe6252fb6b824196.png" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/Sdj_9+xXNN4eDPRO5LdtBglwmXSY99B_u11SzxBjqhg="></p>
+<p>Search for <strong>GSOD NOAA</strong> then select the dataset.</p>
+<p>Click on  <a href="https://console.cloud.google.com/bigquery?p=bigquery-public-data&amp;d=noaa_gsod&amp;page=dataset">View Dataset</a>.</p>
+<p><strong>Scroll through</strong> the tables in the <strong>noaa_gsod</strong> dataset (which are manually sharded and not partitioned)</p>
+<p><img alt="8537f8afdbf8824a.png" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/sB6M27wRVkHxmhHs8oTMDORQVOYcRJABzdzzrtCAlyc="></p>
+<p>First, <strong>copy and paste</strong> this below query to <strong>Query editor</strong>:</p>
+<pre><code>#standardSQL
+ SELECT
+   DATE(CAST(year AS INT64), CAST(mo AS INT64), CAST(da AS INT64)) AS date,
+   (SELECT ANY_VALUE(name) FROM `bigquery-public-data.noaa_gsod.stations` AS stations
+    WHERE stations.usaf = stn) AS station_name,  -- Stations may have multiple names
+   prcp
+ FROM `bigquery-public-data.noaa_gsod.gsod*` AS weather
+ WHERE prcp &lt; 99.9  -- Filter unknown values
+   AND prcp &gt; 0      -- Filter stations/days with no precipitation
+   AND CAST(_TABLE_SUFFIX AS int64) &gt;= 2018
+ ORDER BY date DESC -- Where has it rained/snowed recently
+ LIMIT 10
+</code><button class="button button--copy js-copy-button-5"><i class="fa fa-clipboard"></i></button></pre>
+<p>Note that the table wildcard * used in the FROM clause to limit the amount of tables referred to in the <em>TABLE_SUFFIX</em> filter.</p>
+<p>Note that although a LIMIT 10 was added, this still does not reduce the total amount of data scanned (about 141.6 MB) since there are no partitions yet.</p>
+<p>Click <strong>Run</strong>.</p>
+<p>Confirm the date is properly formatted and the precipitation field is showing non-zero values.</p>
+<h2 id="step7">Your turn: Create a Partitioned Table</h2>
+<p>Modify the previous query to create a table with the below specifications:</p>
+<ul>
+<li>Table name: ecommerce.days_with_rain</li>
+<li>Use the date field as your PARTITION BY</li>
+<li>For OPTIONS, specify partition_expiration_days = 60</li>
+<li>Add the table description = "weather stations with precipitation, partitioned by day"</li>
+</ul>
+<p>Your query should look like this:</p>
+<pre><code>#standardSQL
+ CREATE OR REPLACE TABLE ecommerce.days_with_rain
+ PARTITION BY date
+ OPTIONS (
+   partition_expiration_days=60,
+   description="weather stations with precipitation, partitioned by day"
+ ) AS
+ SELECT
+   DATE(CAST(year AS INT64), CAST(mo AS INT64), CAST(da AS INT64)) AS date,
+   (SELECT ANY_VALUE(name) FROM `bigquery-public-data.noaa_gsod.stations` AS stations
+    WHERE stations.usaf = stn) AS station_name,  -- Stations may have multiple names
+   prcp
+ FROM `bigquery-public-data.noaa_gsod.gsod*` AS weather
+ WHERE prcp &lt; 99.9  -- Filter unknown values
+   AND prcp &gt; 0      -- Filter
+   AND CAST(_TABLE_SUFFIX AS int64) &gt;= 2018
+</code><button class="button button--copy js-copy-button-6"><i class="fa fa-clipboard"></i></button></pre>
+<h4>Confirm data partition expiration is working</h4>
+<p>To confirm you are only storing data from 60 days in the past up until today, run the DATE_DIFF query to get the age of your partitions, which are set to expire after 60 days.</p>
+<p>Below is a query which tracks the average rainfall for the NOAA weather station in  <a href="https://en.wikipedia.org/wiki/Wakayama,_Wakayama#Climate">Wakayama, Japan</a> which has significant precipitation.</p>
+<p>Add this query and run it:</p>
+<pre><code>#standardSQL
+# avg monthly precipitation
+SELECT
+  AVG(prcp) AS average,
+  station_name,
+  date,
+  CURRENT_DATE() AS today,
+  DATE_DIFF(CURRENT_DATE(), date, DAY) AS partition_age,
+  EXTRACT(MONTH FROM date) AS month
+FROM ecommerce.days_with_rain
+WHERE station_name = 'WAKAYAMA' #Japan
+GROUP BY station_name, date, today, month, partition_age
+ORDER BY date DESC; # most recent days first
+</code><button class="button button--copy js-copy-button-7"><i class="fa fa-clipboard"></i></button></pre>
+<h2 id="step8">Confirm the oldest partition_age is at or below 60 days</h2>
+<p>Update the ORDER BY clause to show the oldest partitions first. The date you see there
+Add this query and run it:</p>
+<pre><code>#standardSQL
+# avg monthly precipitation
+
+SELECT
+  AVG(prcp) AS average,
+  station_name,
+  date,
+  CURRENT_DATE() AS today,
+  DATE_DIFF(CURRENT_DATE(), date, DAY) AS partition_age,
+  EXTRACT(MONTH FROM date) AS month
+FROM ecommerce.days_with_rain
+WHERE station_name = 'WAKAYAMA' #Japan
+GROUP BY station_name, date, today, month, partition_age
+ORDER BY partition_age DESC
+</code><button class="button button--copy js-copy-button-8"><i class="fa fa-clipboard"></i></button></pre>
+<aside>
+Note: Your results will vary if you re-run the query in the future, as the weather data, and your partitions, are continuously updated.
+
+</aside>
+<h2 id="step9">Congratulations!</h2>
+<p>You've successfully created and queried partitioned tables in BigQuery.</p>
+<h2 id="step10">End your lab</h2>
+<p>When you have completed your lab, click <strong>End Lab</strong>. Qwiklabs removes the resources you’ve used and cleans the account for you.</p>
+<p>You will be given an opportunity to rate the lab experience. Select the applicable number of stars, type a comment, and then click <strong>Submit</strong>.</p>
+<p>The number of stars indicates the following:</p>
+<ul>
+<li>1 star = Very dissatisfied</li>
+<li>2 stars = Dissatisfied</li>
+<li>3 stars = Neutral</li>
+<li>4 stars = Satisfied</li>
+<li>5 stars = Very satisfied</li>
+</ul>
+<p>You can close the dialog box if you don't want to provide feedback.</p>
+<p>For feedback, suggestions, or corrections, please use the <strong>Support</strong> tab.</p>
+
+<h5>Manual Last Updated: March 25, 2019</h5>
+<h5>Lab Last Tested: March 25, 2019</h5>
+<p>Copyright 2019 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+<div class="js-lab-content-outline lab-content__outline is-stuck">
+<a href="https://googlecoursera.qwiklabs.com/focuses/46801#step1" class="">Overview</a><a href="https://googlecoursera.qwiklabs.com/focuses/46801#step2" class="">Setup</a><a href="https://googlecoursera.qwiklabs.com/focuses/46801#step3" class="">Create a new dataset</a><a href="https://googlecoursera.qwiklabs.com/focuses/46801#step4" class="is-active">Creating tables with date partitions</a><a href="https://googlecoursera.qwiklabs.com/focuses/46801#step5">View data processed with a partitioned table</a><a href="https://googlecoursera.qwiklabs.com/focuses/46801#step6">Creating an auto-expiring partitioned table</a><a href="https://googlecoursera.qwiklabs.com/focuses/46801#step7">Your turn: Create a Partitioned Table</a><a href="https://googlecoursera.qwiklabs.com/focuses/46801#step8">Confirm the oldest partition_age is at or below 60 days</a><a href="https://googlecoursera.qwiklabs.com/focuses/46801#step9">Congratulations!</a><a href="https://googlecoursera.qwiklabs.com/focuses/46801#step10">End your lab</a>
+</div>
+</div>
+
+</div>
+
+
+</div>
+</div>
+<div class="lab-introduction js-lab-introduction is-hidden">
+<div class="lab-introduction__inner">
+<h1 class="headline-1">Welcome to Your First Lab!</h1>
+<ql-icon-button class="js-skip-button">close</ql-icon-button>
+<div class="lab-introduction__video">
+<iframe allow="autoplay; encrypted-media" allowfullscreen="" frameborder="0" id="lab-introduction" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/yF7EDXKTmoQ.html"></iframe>
+</div>
+<a class="js-skip-button button button--outline">Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+<div class="modal fade" id="lab-details-modal">
+<div class="modal-container">
+<div class="mdl-shadow--24dp modal-content">
+<div class="modal-body">
+<p class="l-mbm">
+This lab focuses on how to query partitioned datasets and how to create your own dataset partitions to improve query performance, which reduces cost.
+</p>
+<p class="small-label l-mbs">
+<strong>
+Duration:
+</strong>
+0m setup
+·
+90m access
+·
+60m completion
+</p>
+<p class="small-label l-mbs">
+<span><strong>Levels: </strong>introductory</span>
+</p>
+<p class="small-label">
+<strong>
+Permalink:
+</strong>
+<a href="https://googlecoursera.qwiklabs.com/catalog_lab/2190">https://googlecoursera.qwiklabs.com/catalog_lab/2190</a>
+</p>
+</div>
+<div class="modal-actions">
+<a class="mdl-button mdl-button--primary mdl-js-button mdl-js-ripple-effect" data-dismiss="modal" data-upgraded=",MaterialButton,MaterialRipple">
+Got It
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+</div>
+
+
+</div>
+</div>
+<iframe class="l-ie-iframe-fix" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/saved_resource(2).html"></iframe>
+</div>
+<div class="modal fade" id="lab-review-modal">
+<div class="modal-container">
+<div class="mdl-shadow--24dp modal-content">
+<form class="simple_form js-lab-review-form" id="edit_lab_review_4392251" action="https://googlecoursera.qwiklabs.com/lab_reviews/4392251" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="patch"><div class="modal-body">
+<p class="label">
+How satisfied are you with this lab?*
+</p>
+<div class="rateit js-rateit" data-rateit-max="5" data-rateit-min="0" data-rateit-resetable="false" data-rateit-step="1" data-rateit-value="5"><div class="rateit-reset" style="display: none;"></div><div class="rateit-range" style="width: 80px; height: 16px;"><div class="rateit-selected" style="height: 16px; width: 80px;"></div><div class="rateit-hover" style="height:16px"></div></div></div>
+<div class="l-mtm">
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="2215437" name="lab_review[user_id]" id="lab_review_user_id"></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" value="5982" name="lab_review[classroom_id]" id="lab_review_classroom_id"></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="2190" name="lab_review[lab_id]" id="lab_review_lab_id"></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" value="46801" name="lab_review[focus_id]" id="lab_review_focus_id"></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="2" name="lab_review[rating]" id="lab_review_rating"></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment"></textarea></div></div>
+</div>
+</div>
+<div class="modal-actions">
+<a class="mdl-button mdl-button--primary mdl-js-button mdl-js-ripple-effect" data-dismiss="modal" data-upgraded=",MaterialButton,MaterialRipple">
+Cancel
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" class="btn mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary" id="submit" data-disabled="false" data-disable-with="Submit" data-upgraded=",MaterialButton,MaterialRipple"><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></input>
+</div>
+</form>
+
+</div>
+</div>
+<iframe class="l-ie-iframe-fix" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/saved_resource(3).html"></iframe>
+</div>
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    initLabContent( );
+  ql.labOutline.links.init();
+  ql.labOutline.layout.init();
+  initLabReviewModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+<style>
+  .mdl-layout__container {
+    position: static
+  }
+</style>
+
+
+<iframe data-product="web_widget" title="No content" tabindex="-1" aria-hidden="true" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/saved_resource(4).html" style="width: 0px; height: 0px; border: 0px; position: absolute; top: -9999px;"></iframe><div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s ease 0s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><iframe src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/anchor.html" width="256" height="60" role="presentation" name="a-937fxowxafbp" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/saved_resource(5).html"></iframe></div><object id="__symantecPKIClientMessenger" data-supports-flavor-configuration="true" data-extension-version="0.5.0.109" style="display: none;"></object><span id="__symantecPKIClientDetector" style="display: none;">__PRESENT</span><div><iframe title="Opens a widget where you can chat to one of our agents" id="launcher" tabindex="0" class="zEWidget-launcher zEWidget-launcher--active" style="border: none; background: transparent; z-index: 999998; transform: translateZ(0px); position: fixed; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; opacity: 1; height: 50px; max-height: 551px; min-height: 50px; margin: 10px 20px; right: 0px; bottom: 0px; width: 112px;width: 112px;" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/saved_resource(6).html"></iframe></div><div><iframe title="Find more information here" id="webWidget" tabindex="-1" class="zEWidget-webWidget " style="border: none; background: transparent; z-index: 999999; transform: translateZ(0px); position: fixed; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; opacity: 0; width: 357px; height: 100%; max-height: 565px; min-height: 150px; margin-left: 8px; margin-right: 8px; top: -9999px; visibility: hidden;" src="./Partitioned Tables in Google BigQuery _ Qwiklabs_files/saved_resource(7).html"></iframe></div></body></html>

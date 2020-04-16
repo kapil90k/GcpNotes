@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)https://googlecoursera.qwiklabs.com/focuses/46794 -->
+<html lang="en" class="mdl-js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+<meta content="[]" name="active-experiments">
+<meta content="{&quot;userId&quot;:2215437}" name="help-api-product-data">
+<meta name="csrf-param" content="authenticity_token">
+<meta name="csrf-token" content="WusckZ/xRhPjt6GxtQD5v5yTqFT7dmrl7k3ga5cLjxO6vAAdv5d1SPg3cmA0nX4lQMlyD8FhtWOTJLCjT32Jsg==">
+<title>Movie Recommendations in BigQuery ML | Qwiklabs</title>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0" name="viewport">
+<meta content="In this lab you&#39;ll use the MovieLens dataset to build a collaborative filtering model and use it to make predictions." name="description">
+<meta content="Qwiklabs" name="author">
+<meta content="1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0" name="google-site-verification">
+<meta content="Movie Recommendations in BigQuery ML | Qwiklabs" property="og:title">
+<meta content="website" property="og:type">
+<meta content="/favicon-144.png" property="og:image">
+<meta content="Qwiklabs" property="og:site_name">
+<meta content="In this lab you&#39;ll use the MovieLens dataset to build a collaborative filtering model and use it to make predictions." property="og:description">
+<meta content="/qwiklabs_logo_900x887.png" property="og:logo" size="900x887">
+<meta content="/qwiklabs_logo_994x187.png" property="og:logo" size="994x187">
+<meta content="#3681E4" property="msapplication-TileColor">
+<meta content="/favicon-144.png" property="msapplication-TileImage">
+<link href="https://googlecoursera.qwiklabs.com/favicon-32.png" rel="shortcut icon">
+<link color="#3681E4" href="https://googlecoursera.qwiklabs.com/favicon-svg.svg" rel="mask-icon">
+<link href="https://googlecoursera.qwiklabs.com/favicon-180.png" rel="apple-touch-icon-precomposed">
+<link rel="stylesheet" media="screen" href="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/css">
+
+
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js' type='text/javascript'></script>
+<![endif]-->
+<!--[endif]>  <![endif]-->
+<script type="text/javascript" async="" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/js"></script><script type="text/javascript" async="" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/analytics.js.download"></script><script type="text/javascript" async="" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/analytics.min.js.download"></script><script type="text/javascript" id="www-widgetapi-script" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/www-widgetapi.js.download" async=""></script><script type="text/javascript" async="" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/recaptcha__en.js.download"></script><script>
+//<![CDATA[
+window.gon={};gon.current_user={"firstname":"kapil","lastname":"h kumar","fullname":"kapil h kumar","company":"Coursera","email":"kapil.h.kumar@accenture.com","origin":"googlecoursera-run, lti-coursera","subscriptions":0,"id":"16b3bf895f73ebd7d9e1e7f216f671c6","qlCreatedAt":"2019-11-07 17:13:56 UTC","optIn":null};gon.segment="j4Im8pqIko0Lxq4wVVZWMPMM0EroHUvb";gon.deployment="googlecoursera-run";
+//]]>
+</script>
+<script src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/api.js.download"></script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.qwiklabs.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.qwiklabs.com/catalog?keywords={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script id="ze-snippet" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/snippet.js.download"></script>
+
+
+
+<link rel="stylesheet" media="all" href="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/application-3da541dd71f92e39564c03465c99f32628556dec01f4d39b904adbced14a24aa.css">
+<script>
+  EVENT_SOURCE_BASE_URL = "https://googlecoursera-run.qwiklabs.com/nchan-sub?id=";
+</script>
+<script src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/webcomponents-loader.js.download"></script><script src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/webcomponents-hi.js.download"></script>
+<script src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/hallofmirrors-c8a543a8e9e63ffd57a2b2bb36bd5c342eaa604dffa0f1c63a43d84ccebe2d76.js.download"></script><script async="" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/lazy.min.js.download"></script>
+<script src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/iframe_api"></script>
+<script src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/vendor-45d462772c30000424907184f70c7157e95fb6227698d1671c5051818a6f60d8.js.download"></script>
+<script src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/application-c23343461fee67994bfc26ae6509cf3e86bcddd7d48088f4de19fb8c0ed6eb13.js.download"></script>
+</head>
+<body class="focuses focuses-show lab-show l-full no-nav">
+<div class="header-container">
+<div class="header">
+<a class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect header__button header__button--nav header__nav-panel-button js-nav-toggle" data-upgraded=",MaterialButton,MaterialRipple">
+<i class="material-icons">menu</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<div class="header__title">
+<a class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect header__button header__button--nav" href="https://www.coursera.org/" data-upgraded=",MaterialButton,MaterialRipple"><ql-icon>arrow_back</ql-icon><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+
+<h1 class="headline-5">
+Movie Recommendations in BigQuery ML
+</h1>
+</div>
+<div class="header__actions">
+<a class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect header__button header__button--action header__button--search js-header-search-bar-button" data-upgraded=",MaterialButton,MaterialRipple">
+<i class="material-icons">search</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<a class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" id="toggle-lab-control-panel" href="javascript:;" data-upgraded=",MaterialButton,MaterialRipple" tabindex="0"><i class="material-icons">description</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a><div class="mdl-tooltip js-tooltip" data-mdl-for="toggle-lab-control-panel" data-upgraded=",MaterialTooltip">
+Toggle Lab Panel
+</div>
+
+<ql-help context="lab" productdata="{&quot;userId&quot;:2215437}" data-analytics-action="opened_help" data-analytics-label="lab"></ql-help>
+<a class="header-my-account-button mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect js-my-account-button" data-upgraded=",MaterialButton,MaterialRipple">
+<img class="avatar " alt="avatar image" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/a90f55fd00b2b38b68c8d98327feb703.png">
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<div class="header-my-account-menu js-my-account-menu">
+<div class="card elevation-2 no-padding">
+<div class="my-account-menu__top">
+<img class="avatar " alt="avatar image" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/a90f55fd00b2b38b68c8d98327feb703.png">
+<div class="my-account-menu__info">
+<h4 class="subtitle-headline-1">
+kapil h kumar
+</h4>
+<p class="body-2 text--gray">
+<span>kapil.h.kumar@accenture.com</span>
+</p>
+<a class="button" href="https://googlecoursera.qwiklabs.com/my_account/profile">My Account</a>
+</div>
+</div>
+<div class="my-account-menu__bottom">
+<a class="text--green subtitle-headline-2" href="https://googlecoursera.qwiklabs.com/my_account/credits">0 Credits
+</a><a data-analytics-action="clicked_sign_out" class="button button--hairline" rel="nofollow" data-method="delete" href="https://googlecoursera.qwiklabs.com/users/sign_out">Sign Out</a>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+<div class="header__search-bar js-header-search-bar">
+<form id="catalog-search-mobile" onsubmit="ql.catalogSearchFilter(); return false;" action="https://googlecoursera.qwiklabs.com/searches/elasticsearch" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="WusckZ/xRhPjt6GxtQD5v5yTqFT7dmrl7k3ga5cLjxO6vAAdv5d1SPg3cmA0nX4lQMlyD8FhtWOTJLCjT32Jsg==">
+<input type="text" name="keywords" id="keywords" placeholder="Search" maxlength="255" aria-label="catalog search bar">
+</form>
+
+<a class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect header__button" data-upgraded=",MaterialButton,MaterialRipple">
+<i class="material-icons">close</i>
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+</div>
+</div>
+
+<nav class="nav-bar">
+<a class="nav-bar__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/"><ql-icon class="nav-bar__item__icon">
+home
+</ql-icon>
+<span class="nav-bar__item__label">
+Home
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/catalog"><ql-icon class="nav-bar__item__icon">
+school
+</ql-icon>
+<span class="nav-bar__item__label">
+Catalog
+</span>
+</a>
+<a class="nav-bar__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_learning"><ql-icon class="nav-bar__item__icon">
+event_note
+</ql-icon>
+<span class="nav-bar__item__label">
+My Learning
+</span>
+</a>
+</nav>
+
+<nav class="nav-panel js-nav-panel">
+<div class="nav-panel__logo">
+<div class="logo logo--blue"></div>
+</div>
+<a title="Home" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/"><ql-icon class="nav-panel__item__icon">
+home
+</ql-icon>
+<div class="nav-panel__item__label">
+Home
+</div>
+</a>
+<a title="Catalog" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/catalog"><ql-icon class="nav-panel__item__icon">
+school
+</ql-icon>
+<div class="nav-panel__item__label">
+Catalog
+</div>
+</a>
+<a title="My Learning" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_learning"><ql-icon class="nav-panel__item__icon">
+event_note
+</ql-icon>
+<div class="nav-panel__item__label">
+My Learning
+</div>
+</a>
+<div class="nav-panel__spacer"></div>
+<a title="Profile" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_account/profile"><ql-icon class="nav-panel__item__icon">
+account_circle
+</ql-icon>
+<div class="nav-panel__item__label">
+Profile
+</div>
+</a>
+<a title="Credits &amp; Subscriptions" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_account/credits"><ql-icon class="nav-panel__item__icon">
+money
+</ql-icon>
+<div class="nav-panel__item__label">
+Credits &amp; Subscriptions
+</div>
+</a>
+<a title="Security" tabindex="-1" class="nav-panel__item js-navigation-button" href="https://googlecoursera.qwiklabs.com/my_account/security"><ql-icon class="nav-panel__item__icon">
+security
+</ql-icon>
+<div class="nav-panel__item__label">
+Security
+</div>
+</a>
+<div class="nav-panel__spacer"></div>
+<a class="nav-panel__item" tabindex="-1" href="https://googlecoursera.qwiklabs.com/focuses/46794#"><ql-help>
+<div class="nav-panel__help-item">
+<ql-icon class="nav-panel__item__icon">help</ql-icon>
+<div class="nav-panel__item__label">Help</div>
+</div>
+</ql-help>
+</a><div class="nav-panel__small-links">
+<a tabindex="-1" href="https://googlecoursera.qwiklabs.com/privacy_policy">Privacy</a>
+<a tabindex="-1" href="https://googlecoursera.qwiklabs.com/terms_of_service">Terms</a>
+</div>
+</nav>
+<div class="nav-panel__overlay js-nav-toggle"></div>
+
+<main class="js-main">
+<span class="hidden" id="flash-sibling-before"></span>
+
+<div class="l-main-wrapper" id="main-wrapper">
+
+
+
+
+
+
+
+<div class="js-lab-state" data-analytics-payload="{&quot;label&quot;:&quot;Movie Recommendations in BigQuery ML&quot;,&quot;lab_name&quot;:&quot;Movie Recommendations in BigQuery ML&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;googlecoursera-run&quot;}" data-focus-id="46794" data-lab-billing-limit="0.0" data-lab-duration="3600" data-parent="classroom"></div>
+<ql-lab-control-panel class="js-lab-control-panel l-lab-control-panel" connectiondetails="[]" connectionfiles="[]" labcontrolbutton="{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}" labtimer="{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:3600}" studentresources="[]"></ql-lab-control-panel>
+<div class="l-lab-main-body">
+<div class="js-lab-content lab-content">
+<div class="alert alert--fake js-alert">
+<p class="alert__message js-alert-message"></p>
+<a class="alert__close js-alert-close">
+<i class="fa fa-times"></i>
+</a>
+<iframe class="l-ie-iframe-fix" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/saved_resource(1).html"></iframe>
+</div>
+<div class="lab-content__markdown-wrapper">
+<div class="lab-preamble">
+<h1 class="lab-preamble__title">
+Movie Recommendations in BigQuery ML
+</h1>
+<div class="lab-preamble__details subtitle-headline-1">
+<span>1 hour </span>
+<span>7 Credits</span>
+<div class="lab__rating">
+<a href="https://googlecoursera.qwiklabs.com/focuses/46794/reviews?parent=catalog"><div class="rateit" data-rateit-readonly="true" data-rateit-value="4.3233"><div class="rateit-reset" style="display: none;"></div><div class="rateit-range" style="width: 80px; height: 16px;"><div class="rateit-selected" style="height: 16px; width: 69.1728px;"></div><div class="rateit-hover" style="height:16px"></div></div></div>
+
+</a><a data-target="#lab-review-modal" data-toggle="modal">
+Rate Lab
+</a>
+</div>
+</div>
+</div>
+
+<div class="lab-content__inner-wrapper">
+<div class="js-markdown-instructions lab-content__markdown markdown-lab-instructions" id="markdown-lab-instructions">
+
+
+
+<h2 id="step1">Overview</h2>
+<p>BigQuery is Google's fully managed, NoOps, low cost analytics database. With BigQuery you can query terabytes and terabytes of data without having any infrastructure to manage or needing a database administrator. BigQuery uses SQL and can take advantage of the pay-as-you-go model. BigQuery allows you to focus on analyzing data to find meaningful insights.</p>
+<p><a href="https://cloud.google.com/bigquery/docs/bigqueryml-analyst-start">BigQuery Machine Learning</a> (BQML, product in beta) is a new feature in BigQuery where data analysts can create, train, evaluate, and predict with machine learning models with minimal coding.</p>
+<p>Collaborative filtering provides a way to generate product recommendations for users, or user targeting for products. The starting point is a table with three columns: a user id, an item id, and the rating that the user gave the product. This table can be sparse -- users don’t have to rate all products. Then, based on just the ratings, the technique finds similar users and similar products and determines the rating that a user would give an unseen product. Then, we can recommend the products with the highest predicted ratings to users, or target products at users with the highest predicted ratings.</p>
+<p>To illustrate recommender systems in action, we'll use the MovieLens dataset. This is a dataset of movie reviews released by <a href="https://grouplens.org/about/what-is-grouplens/">GroupLens</a>, a research lab in the Department of Computer Science and Engineering at the University of Minnesota, through funding by the US National Science Foundation.</p>
+<h3>Objectives</h3>
+<p>In this lab, you learn to perform the following tasks:</p>
+<ul>
+<li>
+<p>Train a recommendation model in BigQuery</p>
+</li>
+<li>
+<p>Make product predictions for both single users and batch users</p>
+</li>
+</ul>
+<h2 id="step2">Set up your environment</h2>
+<h4>What you'll need</h4>
+<p>To complete this lab, you’ll need:</p>
+<ul>
+<li>
+<p>Access to a standard internet browser (Chrome browser recommended).</p>
+</li>
+<li>
+<p>Time. Note the lab’s <strong>Completion</strong> time in Qwiklabs. This is an estimate of the time it should take to complete all steps.  Plan your schedule so you have time to complete the lab. Once you start the lab, you will not be able to pause and return later (you begin at step 1 every time you start a lab).</p>
+</li>
+<li>
+<p>The lab's <strong>Access</strong> time is how long your lab resources will be available. If you finish your lab with access time still available, you will be able to explore the Google Cloud Platform or work on any section of the lab that was marked "if you have time". Once the Access time runs out, your lab will end and all resources will terminate.</p>
+</li>
+<li>
+<p>You <strong>DO NOT</strong> need a Google Cloud Platform account or project. An account, project and associated resources are provided to you as part of this lab.</p>
+</li>
+<li>
+<p>If you already have your own GCP account, make sure you do not use it for this lab.</p>
+</li>
+<li>
+<p>If your lab prompts you to log into the console, <strong>use only the student account provided to you by the lab</strong>. This prevents you from incurring charges for lab activities in your personal GCP account.</p>
+</li>
+</ul>
+<h4>Start your lab</h4>
+<p>When you are ready, click <strong>Start Lab</strong>. You can track your lab’s progress with the status bar at the top of your screen.</p>
+<aside>
+<strong>Important</strong> What is happening during this time?
+  Your lab is spinning up GCP resources for you behind the scenes, including an account, a project, resources within the project, and permission for you to control the resources needed to run the lab. This means that instead of spending time manually setting up a project and building resources from scratch as part of your lab, you can begin learning more quickly.
+
+</aside>
+<h4>Find Your Lab’s GCP Username and Password</h4>
+<p>To access the resources and console for this lab, locate the Connection Details panel in Qwiklabs.  Here you will find the account ID and password for the account you will use to log in to the Google Cloud Platform:</p>
+<p><img alt="Open Google Console" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/0d78dhX6IVMVWmixCPPSBbmi5O2GPokCXf1Ps1AkTgI="></p>
+<p>If your lab provides other resource identifiers or connection-related information, it will appear on this panel as well.</p>
+
+<h4>Log in to Google Cloud Console</h4>
+<p>Using the Qwiklabs browser tab/window or the separate browser you are using for the Qwiklabs session, copy the Username from the Connection Details panel and click the <strong>Open Google Console</strong> button.</p>
+<p>You'll be asked to Choose an account. Click <strong>Use another account</strong>.
+<img alt="Google_choose_Account" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/wNoohdL+wyBavWAhxkN5euPH2ulJhiOzoBlmi1+mGSw="></p>
+<p>Paste in the Username, and then the Password as prompted:</p>
+<p><img alt="Sign in to continue to Google Cloud Platform" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/rP81bHN99Vr7kaKU7fqy2IuSj1rjjNXkD1iunRSBWBw="></p>
+<p>Accept the terms and conditions.</p>
+<p>Since this is a temporary account, which you will only have to access for this one lab:</p>
+<ul>
+<li>Do not add recovery options</li>
+<li>Do not sign up for free trials</li>
+</ul>
+<aside>
+<strong>Note:</strong> You can view the list of services by clicking the GCP Navigation menu button at the top-left next to “Google Cloud Platform”.
+
+  <img alt="Cloud Console Menu" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/RIuVVYUkGtVaWhxtIFJugxyy_ORWQYw7OrLR0bJlReI=">
+</aside>
+
+<h3>Open BigQuery Console</h3>
+<p>In the Google Cloud Console, select <strong>Navigation menu</strong> &gt; <strong>BigQuery</strong>:</p>
+<p><img alt="BigQuery_menu.png" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/QwUX6algdXPgIThqBlgB2rnqGkoQUUANkl3xicD06uc="></p>
+<p>The <strong>Welcome to BigQuery in the Cloud Console</strong> message box opens. This message box provides a link to the quickstart guide and lists UI updates.</p>
+<p>Click <strong>Done</strong>.</p>
+
+<h2 id="step3">Task 1: Get MovieLens Data</h2>
+<p>First, we're going to use the command line to create a BigQuery dataset to store the MovieLens data. The MovieLens data will then be downloaded and placed in the dataset.</p>
+<h3><strong>Start the Cloud Shell Editor</strong></h3>
+<p>To create a BigQuery dataset and download the MovieLens data the Cloud Shell Editor is used.</p>
+<ol>
+<li>
+<p>In the GCP Console, click <strong>Activate Cloud Shell</strong> (<img alt="Cloud Shell" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/ep8HmqYGdD_kUncAAYpV47OYoHwC8+g0WK_8sidHquE=" title="Cloud Shell">).</p>
+</li>
+<li>
+<p>If prompted, click <strong>Start Cloud Shell</strong>.</p>
+</li>
+</ol>
+<h3><strong>Create a BigQuery Dataset</strong></h3>
+<ol>
+<li>
+<p>Run the following command to create a BigQuery dataset named <code>movies</code>:</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint prettyprinted" style=""><span class="pln">bq </span><span class="pun">--</span><span class="pln">location</span><span class="pun">=</span><span class="pln">EU mk </span><span class="pun">--</span><span class="pln">dataset movies</span></code><button class="button button--copy js-copy-button-0"><i class="fa fa-clipboard"></i></button></pre>
+<h3><strong>Download Data with <code>curl</code> and load to Dataset</strong></h3>
+<ol>
+<li>
+<p>Run the following command in Cloud Shell Editor:</p>
+</li>
+</ol>
+<pre><code class="language-bash prettyprint prettyprinted" style=""><span class="pln">curl </span><span class="pun">-</span><span class="pln">O </span><span class="str">'http://files.grouplens.org/datasets/movielens/ml-20m.zip'</span><span class="pln">
+unzip ml</span><span class="pun">-</span><span class="lit">20m</span><span class="pun">.</span><span class="pln">zip
+
+bq </span><span class="pun">--</span><span class="pln">location</span><span class="pun">=</span><span class="pln">EU load </span><span class="pun">--</span><span class="pln">source_format</span><span class="pun">=</span><span class="pln">CSV \
+   </span><span class="pun">--</span><span class="pln">autodetect movies</span><span class="pun">.</span><span class="pln">movielens_ratings ml</span><span class="pun">-</span><span class="lit">20m</span><span class="pun">/</span><span class="pln">ratings</span><span class="pun">.</span><span class="pln">csv
+bq </span><span class="pun">--</span><span class="pln">location</span><span class="pun">=</span><span class="pln">EU load </span><span class="pun">--</span><span class="pln">source_format</span><span class="pun">=</span><span class="pln">CSV \
+   </span><span class="pun">--</span><span class="pln">autodetect movies</span><span class="pun">.</span><span class="pln">movielens_movies_raw ml</span><span class="pun">-</span><span class="lit">20m</span><span class="pun">/</span><span class="pln">movies</span><span class="pun">.</span><span class="pln">csv</span></code><button class="button button--copy js-copy-button-1"><i class="fa fa-clipboard"></i></button></pre>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="1">
+Get MovieLens Data
+</ql-activity-tracking></p>
+<h2 id="step4">Task 2: Explore the Data</h2>
+<ol>
+<li>
+<p>In BigQuery's <strong>Query editor</strong> execute the following query:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT
+  COUNT</span><span class="pun">(</span><span class="pln">DISTINCT userId</span><span class="pun">)</span><span class="pln"> numUsers</span><span class="pun">,</span><span class="pln">
+  COUNT</span><span class="pun">(</span><span class="pln">DISTINCT movieId</span><span class="pun">)</span><span class="pln"> numMovies</span><span class="pun">,</span><span class="pln">
+  COUNT</span><span class="pun">(*)</span><span class="pln"> totalRatings
+FROM
+  movies</span><span class="pun">.</span><span class="pln">movielens_ratings</span></code><button class="button button--copy js-copy-button-2"><i class="fa fa-clipboard"></i></button></pre>
+<p>You should confirm that the dataset consists of over 138 thousand users, nearly 27 thousand movies, and a little more than 20 million ratings.</p>
+<ol start="2">
+<li>
+<p>Examine the first few movies using the query:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT
+  </span><span class="pun">*</span><span class="pln">
+FROM
+  movies</span><span class="pun">.</span><span class="pln">movielens_movies_raw
+WHERE
+  movieId </span><span class="pun">&lt;</span><span class="pln"> </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-3"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="1.png" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/+zWgCxeE4yA2VoPmcuDT6KfNkUn1jOVOYKaBqd6CO0w="></p>
+<ol start="3">
+<li>
+<p>We can see that the genres column is a formatted string. Parse the genres into an array and rewrite the results into a table named <code>movielens_movies</code>.</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">CREATE OR REPLACE TABLE
+  movies</span><span class="pun">.</span><span class="pln">movielens_movies AS
+SELECT
+  </span><span class="pun">*</span><span class="pln"> REPLACE</span><span class="pun">(</span><span class="pln">SPLIT</span><span class="pun">(</span><span class="pln">genres</span><span class="pun">,</span><span class="pln"> </span><span class="str">"|"</span><span class="pun">)</span><span class="pln"> AS genres</span><span class="pun">)</span><span class="pln">
+FROM
+  movies</span><span class="pun">.</span><span class="pln">movielens_movies_raw</span></code><button class="button button--copy js-copy-button-4"><i class="fa fa-clipboard"></i></button></pre>
+<p>Feel free to perform additional queries until you are comfortable with the dataset.</p>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="2">
+Explore the Data
+</ql-activity-tracking></p>
+<h2 id="step5">Task 3: Collaborative Filtering</h2>
+<p>Matrix factorization is a collaborative filtering technique that relies on two vectors called the user factors and the item factors. The user factors is a low-dimensional representation of a <code>user_id</code> and the item factors similarly represents an <code>item_id</code>.</p>
+<p>To perform a matrix factorization of our data we use the typical BigQuery ML syntax except that the <code>model_type</code> is <code>matrix_factorization</code> and that we have to identify which columns play what roles in the collaborative filtering setup.</p>
+<ol>
+<li>In order to apply matrix factorization to the movie ratings data the BQML query that needs to be executed is listed in the block below.  However, creation of this model type can take up to 40 minutes and requires a Google Cloud project with reservation-oriented resources -- which is unlike those offered by the Qwiklabs environment.</li>
+</ol>
+<p>A model has been created in the Cloud Training project's <strong>cloud-training-prod-bucket</strong> BigQuery dataset for use in the rest of the lab.</p>
+<p><strong>NOTE:</strong>  Please <strong>DO NOT EXECUTE</strong> this query in your project.</p>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">CREATE OR REPLACE MODEL
+  movies</span><span class="pun">.</span><span class="pln">movie_recommender
+OPTIONS
+  </span><span class="pun">(</span><span class="pln">model_type</span><span class="pun">=</span><span class="str">'matrix_factorization'</span><span class="pun">,</span><span class="pln">
+    user_col</span><span class="pun">=</span><span class="str">'userId'</span><span class="pun">,</span><span class="pln">
+    item_col</span><span class="pun">=</span><span class="str">'movieId'</span><span class="pun">,</span><span class="pln">
+    rating_col</span><span class="pun">=</span><span class="str">'rating'</span><span class="pun">,</span><span class="pln">
+    l2_reg</span><span class="pun">=</span><span class="lit">0.2</span><span class="pun">,</span><span class="pln">
+    num_factors</span><span class="pun">=</span><span class="lit">16</span><span class="pun">)</span><span class="pln"> AS
+SELECT
+  userId</span><span class="pun">,</span><span class="pln">
+  movieId</span><span class="pun">,</span><span class="pln">
+  rating
+FROM
+  movies</span><span class="pun">.</span><span class="pln">movielens_ratings</span></code><button class="button button--copy js-copy-button-5"><i class="fa fa-clipboard"></i></button></pre>
+<p>Note, the <code>num_factors</code> and <code>l2_reg</code> options have been selected after much experimentation to speed up training of the model.</p>
+<ol start="2">
+<li>
+<p>To view metrics for the trained model enter the following query:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT </span><span class="pun">*</span><span class="pln"> FROM ML</span><span class="pun">.</span><span class="pln">EVALUATE</span><span class="pun">(</span><span class="pln">MODEL </span><span class="str">`cloud-training-prod-bucket.movies.movie_recommender`</span><span class="pun">)</span></code><button class="button button--copy js-copy-button-6"><i class="fa fa-clipboard"></i></button></pre>
+<h2 id="step6">Task 4: Making Recommendations</h2>
+<p>With the trained model, we can now provide recommendations.</p>
+<ol>
+<li>
+<p>Let’s find the best comedy movies to recommend to the user whose <code>userId</code> is 903. Enter the query below:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT
+  </span><span class="pun">*</span><span class="pln">
+FROM
+  ML</span><span class="pun">.</span><span class="pln">PREDICT</span><span class="pun">(</span><span class="pln">MODEL </span><span class="str">`cloud-training-prod-bucket.movies.movie_recommender`</span><span class="pun">,</span><span class="pln">
+    </span><span class="pun">(</span><span class="pln">
+    SELECT
+      movieId</span><span class="pun">,</span><span class="pln">
+      title</span><span class="pun">,</span><span class="pln">
+      </span><span class="lit">903</span><span class="pln"> AS userId
+    FROM
+      </span><span class="str">`movies.movielens_movies`</span><span class="pun">,</span><span class="pln">
+      UNNEST</span><span class="pun">(</span><span class="pln">genres</span><span class="pun">)</span><span class="pln"> g
+    WHERE
+      g </span><span class="pun">=</span><span class="pln"> </span><span class="str">'Comedy'</span><span class="pln"> </span><span class="pun">))</span><span class="pln">
+ORDER BY
+  predicted_rating DESC
+LIMIT
+  </span><span class="lit">5</span><span class="pln">  </span></code><button class="button button--copy js-copy-button-7"><i class="fa fa-clipboard"></i></button></pre>
+<p><img alt="2.png" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/pyIP8A80+3kkY+DVH61MEi0LU8P+MLUbvASXoi1MFZk="></p>
+<ol start="2">
+<li>
+<p>This result includes movies the user has already seen and rated in the past. Let’s remove them:</p>
+</li>
+</ol>
+<pre><code class="language-sql prettyprint prettyprinted" style=""><span class="pln">SELECT
+  </span><span class="pun">*</span><span class="pln">
+FROM
+  ML</span><span class="pun">.</span><span class="pln">PREDICT</span><span class="pun">(</span><span class="pln">MODEL </span><span class="str">`cloud-training-prod-bucket.movies.movie_recommender`</span><span class="pun">,</span><span class="pln">
+    </span><span class="pun">(</span><span class="pln">
+    WITH
+      seen AS </span><span class="pun">(</span><span class="pln">
+      SELECT
+        ARRAY_AGG</span><span class="pun">(</span><span class="pln">movieId</span><span class="pun">)</span><span class="pln"> AS movies
+      FROM
+        movies</span><span class="pun">.</span><span class="pln">movielens_ratings
+      WHERE
+        userId </span><span class="pun">=</span><span class="pln"> </span><span class="lit">903</span><span class="pln"> </span><span class="pun">)</span><span class="pln">
+    SELECT
+      movieId</span><span class="pun">,</span><span class="pln">
+      title</span><span class="pun">,</span><span class="pln">
+      </span><span class="lit">903</span><span class="pln"> AS userId
+    FROM
+      movies</span><span class="pun">.</span><span class="pln">movielens_movies</span><span class="pun">,</span><span class="pln">
+      UNNEST</span><span class="pun">(</span><span class="pln">genres</span><span class="pun">)</span><span class="pln"> g</span><span class="pun">,</span><span class="pln">
+      seen
+    WHERE
+      g </span><span class="pun">=</span><span class="pln"> </span><span class="str">'Comedy'</span><span class="pln">
+      AND movieId NOT IN UNNEST</span><span class="pun">(</span><span class="pln">seen</span><span class="pun">.</span><span class="pln">movies</span><span class="pun">)</span><span class="pln"> </span><span class="pun">))</span><span class="pln">
+ORDER BY
+  predicted_rating DESC
+LIMIT
+  </span><span class="lit">5</span></code><button class="button button--copy js-copy-button-8"><i class="fa fa-clipboard"></i></button></pre>
+<p>For this user, this happens to yield the same set of movies -- the top predicted ratings didn’t include any of the movies the user has already seen.</p>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="3">
+Making Recommendations
+</ql-activity-tracking></p>
+<h2 id="step7">Task 5: Customer Targeting</h2>
+<p>In the previous section, we looked at how to identify the top-rated movies for a specific user. Sometimes, we have a product and have to find the customers who are likely to appreciate it.</p>
+<ol>
+<li>
+<p>We wish to get more reviews for <code>movieId=96481</code> which has only one rating and we wish to send coupons to the 100 users who are likely to rate it the highest. Identify those users using:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT
+  </span><span class="pun">*</span><span class="pln">
+FROM
+  ML</span><span class="pun">.</span><span class="pln">PREDICT</span><span class="pun">(</span><span class="pln">MODEL </span><span class="str">`cloud-training-prod-bucket.movies.movie_recommender`</span><span class="pun">,</span><span class="pln">
+    </span><span class="pun">(</span><span class="pln">
+    WITH
+      allUsers AS </span><span class="pun">(</span><span class="pln">
+      SELECT
+        DISTINCT userId
+      FROM
+        movies</span><span class="pun">.</span><span class="pln">movielens_ratings </span><span class="pun">)</span><span class="pln">
+    SELECT
+      </span><span class="lit">96481</span><span class="pln"> AS movieId</span><span class="pun">,</span><span class="pln">
+      </span><span class="pun">(</span><span class="pln">
+      SELECT
+        title
+      FROM
+        movies</span><span class="pun">.</span><span class="pln">movielens_movies
+      WHERE
+        movieId</span><span class="pun">=</span><span class="lit">96481</span><span class="pun">)</span><span class="pln"> title</span><span class="pun">,</span><span class="pln">
+      userId
+    FROM
+      allUsers </span><span class="pun">))</span><span class="pln">
+ORDER BY
+  predicted_rating DESC
+LIMIT
+  </span><span class="lit">100</span></code><button class="button button--copy js-copy-button-9"><i class="fa fa-clipboard"></i></button></pre>
+<p>The result gives us 100 users to target, the top 5 of whom are:</p>
+<p><img alt="3.png" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/wJOfw5hwkYxB6xbFk24ZriueE5hlZ14bFKvQOScF0ZM="></p>
+<p>Click <em>Check my progress</em> to verify the objective.
+<ql-activity-tracking step="4">
+Customer Targeting
+</ql-activity-tracking></p>
+<h2 id="step8">Task 6: Batch predictions for all users and movies</h2>
+<p>What if we wish to carry out predictions for every user and movie combination? Instead of having to pull distinct users and movies as in the previous query, a convenience function is provided to carry out batch predictions for all <code>movieId</code> and <code>userId</code> encountered during training.</p>
+<ol>
+<li>
+<p>Enter the following query to obtain batch predictions:</p>
+</li>
+</ol>
+<pre><code class="language-SQL prettyprint prettyprinted" style=""><span class="pln">SELECT
+  </span><span class="pun">*</span><span class="pln">
+FROM
+  ML</span><span class="pun">.</span><span class="pln">RECOMMEND</span><span class="pun">(</span><span class="pln">MODEL </span><span class="str">`cloud-training-prod-bucket.movies.movie_recommender`</span><span class="pun">)</span><span class="pln">
+LIMIT 
+  </span><span class="lit">100000</span></code><button class="button button--copy js-copy-button-10"><i class="fa fa-clipboard"></i></button></pre>
+<p>Without the LIMIT command the results would be too large to return given the default settings. But the output provides you a sense of the type of predictions that can be made with this model.</p>
+<p>As seen in a section above, it is possible to filter out movies the user has already seen and rated in the past. The reason already seen movies aren’t filtered out by default is that there are situations (think of restaurant recommendations, for example) where it is perfectly expected that we would need to recommend restaurants the user has liked in the past.</p>
+<h2 id="step9">End your lab</h2>
+<p>When you have completed your lab, click <strong>End Lab</strong>. Qwiklabs removes the resources you’ve used and cleans the account for you.</p>
+<p>You will be given an opportunity to rate the lab experience. Select the applicable number of stars, type a comment, and then click <strong>Submit</strong>.</p>
+<p>The number of stars indicates the following:</p>
+<ul>
+<li>1 star = Very dissatisfied</li>
+<li>2 stars = Dissatisfied</li>
+<li>3 stars = Neutral</li>
+<li>4 stars = Satisfied</li>
+<li>5 stars = Very satisfied</li>
+</ul>
+<p>You can close the dialog box if you don't want to provide feedback.</p>
+<p>For feedback, suggestions, or corrections, please use the <strong>Support</strong> tab.</p>
+
+<p>©2019 Google LLC All rights reserved. Google and the Google logo are trademarks of Google LLC. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+
+
+
+</div>
+<div class="js-lab-content-outline lab-content__outline">
+<a href="https://googlecoursera.qwiklabs.com/focuses/46794#step1">Overview</a><a href="https://googlecoursera.qwiklabs.com/focuses/46794#step2">Set up your environment</a><a href="https://googlecoursera.qwiklabs.com/focuses/46794#step3">Task 1: Get MovieLens Data</a><a href="https://googlecoursera.qwiklabs.com/focuses/46794#step4">Task 2: Explore the Data</a><a href="https://googlecoursera.qwiklabs.com/focuses/46794#step5">Task 3: Collaborative Filtering</a><a href="https://googlecoursera.qwiklabs.com/focuses/46794#step6">Task 4: Making Recommendations</a><a href="https://googlecoursera.qwiklabs.com/focuses/46794#step7">Task 5: Customer Targeting</a><a href="https://googlecoursera.qwiklabs.com/focuses/46794#step8">Task 6: Batch predictions for all users and movies</a><a href="https://googlecoursera.qwiklabs.com/focuses/46794#step9">End your lab</a>
+</div>
+</div>
+
+</div>
+
+
+</div>
+</div>
+<div class="lab-assessment__tab js-lab-assessment-tab">
+<h5 class="small-label">
+Score
+</h5>
+<h3 class="js-lab-assessment-total-score">
+—/20
+</h3>
+<iframe class="l-ie-iframe-fix" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/saved_resource(2).html"></iframe>
+</div>
+<div class="lab-assessment__panel js-lab-assessment-panel">
+<!-- / If lab_instance has is started and assessment is generated, use -->
+<!-- / lab_instance.assessment, otherwise use lab.assessment_manual -->
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+Get MovieLens Data
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="1">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-1">
+</span>
+/ 5
+</p>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+Explore the Data
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="2">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-2">
+</span>
+/ 5
+</p>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+Making Recommendations
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="3">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-3">
+</span>
+/ 5
+</p>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title">
+ Customer Targeting
+</p>
+<p class="button button--assessment js-show-run-step-button" step_no="4">
+Run Step
+</p>
+<p class="lab-assessment__step__score">
+<span class="js-assessment-step-score-4">
+</span>
+/ 5
+</p>
+</div>
+
+<iframe class="l-ie-iframe-fix" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/saved_resource(3).html"></iframe>
+</div>
+<div class="lab-introduction js-lab-introduction is-hidden">
+<div class="lab-introduction__inner">
+<h1 class="headline-1">Welcome to Your First Lab!</h1>
+<ql-icon-button class="js-skip-button">close</ql-icon-button>
+<div class="lab-introduction__video">
+<iframe allow="autoplay; encrypted-media" allowfullscreen="" frameborder="0" id="lab-introduction" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/yF7EDXKTmoQ.html"></iframe>
+</div>
+<a class="js-skip-button button button--outline">Skip this video</a>
+</div>
+</div>
+
+
+
+</div>
+</main>
+<div class="modal fade" id="lab-details-modal">
+<div class="modal-container">
+<div class="mdl-shadow--24dp modal-content">
+<div class="modal-body">
+<p class="l-mbm">
+In this lab you'll use the MovieLens dataset to build a collaborative filtering model and use it to make predictions.
+</p>
+<p class="small-label l-mbs">
+<strong>
+Duration:
+</strong>
+0m setup
+·
+60m access
+·
+60m completion
+</p>
+<p class="small-label l-mbs">
+<span><strong>Levels: </strong>advanced</span>
+</p>
+<p class="small-label">
+<strong>
+Permalink:
+</strong>
+<a href="https://googlecoursera.qwiklabs.com/catalog_lab/2126">https://googlecoursera.qwiklabs.com/catalog_lab/2126</a>
+</p>
+</div>
+<div class="modal-actions">
+<a class="mdl-button mdl-button--primary mdl-js-button mdl-js-ripple-effect" data-dismiss="modal" data-upgraded=",MaterialButton,MaterialRipple">
+Got It
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+</div>
+
+
+</div>
+</div>
+<iframe class="l-ie-iframe-fix" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/saved_resource(4).html"></iframe>
+</div>
+<div class="modal fade" id="lab-review-modal">
+<div class="modal-container">
+<div class="mdl-shadow--24dp modal-content">
+<form class="simple_form js-lab-review-form" id="edit_lab_review_4405856" action="https://googlecoursera.qwiklabs.com/lab_reviews/4405856" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="patch"><div class="modal-body">
+<p class="label">
+How satisfied are you with this lab?*
+</p>
+<div class="rateit js-rateit" data-rateit-max="5" data-rateit-min="0" data-rateit-resetable="false" data-rateit-step="1" data-rateit-value="5"><div class="rateit-reset" style="display: none;"></div><div class="rateit-range" style="width: 80px; height: 16px;"><div class="rateit-selected" style="height: 16px; width: 80px;"></div><div class="rateit-hover" style="height:16px"></div></div></div>
+<div class="l-mtm">
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" type="hidden" value="2215437" name="lab_review[user_id]" id="lab_review_user_id"></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" type="hidden" value="5975" name="lab_review[classroom_id]" id="lab_review_classroom_id"></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" type="hidden" value="2126" name="lab_review[lab_id]" id="lab_review_lab_id"></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" type="hidden" value="46794" name="lab_review[focus_id]" id="lab_review_focus_id"></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" type="hidden" value="2" name="lab_review[rating]" id="lab_review_rating"></div></div>
+<div class="control-group text optional lab_review_comment"><label class="text optional control-label" for="lab_review_comment">Comment</label><div class="controls"><textarea class="text optional" name="lab_review[comment]" id="lab_review_comment"></textarea></div></div>
+</div>
+</div>
+<div class="modal-actions">
+<a class="mdl-button mdl-button--primary mdl-js-button mdl-js-ripple-effect" data-dismiss="modal" data-upgraded=",MaterialButton,MaterialRipple">
+Cancel
+<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+<input type="submit" name="commit" value="Submit" disabled="disabled" class="btn mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary" id="submit" data-disabled="false" data-disable-with="Submit" data-upgraded=",MaterialButton,MaterialRipple"><span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></input>
+</div>
+</form>
+
+</div>
+</div>
+<iframe class="l-ie-iframe-fix" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/saved_resource(5).html"></iframe>
+</div>
+
+<script>
+  $( function() {
+    ql.initMaterialInputs();
+    initChosen();
+    initSearch();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    ql.analytics.init();
+    initLabContent( );
+  ql.labOutline.links.init();
+  ql.labOutline.layout.init();
+  initLabReviewModal();
+  ql.labAssessment.init();
+  ql.labIntroduction.init( true );
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"All done? If you end this lab, you will lose all your work. You may not be able to restart the lab if there is a quota limit. Are you sure you want to end this lab?\n","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.\n","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.initHeader();
+  ql.navigation.init();
+  ql.navPanel.init();
+  ql.navigation.init();
+  
+  });
+</script>
+<style>
+  .mdl-layout__container {
+    position: static
+  }
+</style>
+
+
+<iframe data-product="web_widget" title="No content" tabindex="-1" aria-hidden="true" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/saved_resource(6).html" style="width: 0px; height: 0px; border: 0px; position: absolute; top: -9999px;"></iframe><div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s ease 0s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><iframe src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/anchor.html" width="256" height="60" role="presentation" name="a-3jc7jz8cy64c" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/saved_resource(7).html"></iframe></div><object id="__symantecPKIClientMessenger" data-supports-flavor-configuration="true" data-extension-version="0.5.0.109" style="display: none;"></object><span id="__symantecPKIClientDetector" style="display: none;">__PRESENT</span><div><iframe title="Opens a widget where you can chat to one of our agents" id="launcher" tabindex="0" class="zEWidget-launcher zEWidget-launcher--active" style="border: none; background: transparent; z-index: 999998; transform: translateZ(0px); position: fixed; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; opacity: 1; height: 50px; max-height: 551px; min-height: 50px; margin: 10px 20px; right: 0px; bottom: 0px; width: 112px;width: 112px;" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/saved_resource(8).html"></iframe></div><div><iframe title="Find more information here" id="webWidget" tabindex="-1" class="zEWidget-webWidget " style="border: none; background: transparent; z-index: 999999; transform: translateZ(0px); position: fixed; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; opacity: 0; width: 357px; height: 100%; max-height: 565px; min-height: 150px; margin-left: 8px; margin-right: 8px; top: -9999px; visibility: hidden;" src="./Movie Recommendations in BigQuery ML _ Qwiklabs_files/saved_resource(9).html"></iframe></div></body></html>
